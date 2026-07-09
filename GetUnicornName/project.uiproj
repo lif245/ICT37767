@@ -1,0 +1,6 @@
+{
+  "Name": "GetUnicornName",
+  "ProjectType": "Process",
+  "Description": "ato unicon",
+  "MainFile": "Main.xaml"
+}
