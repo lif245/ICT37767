@@ -1,0 +1,6 @@
+{
+  "Name": "HR_Recruitment_Automation",
+  "ProjectType": "Process",
+  "Description": "Blank Process",
+  "MainFile": "Main.xaml"
+}

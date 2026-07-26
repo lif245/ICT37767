@@ -1,0 +1,3216 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HR Dashboard — ระบบคัดกรองผู้สมัครงานอัตโนมัติ ด้วย UiPath RPA Bot">
+    <meta name="keywords" content="HR, Dashboard, Recruitment, Screening, RPA, UiPath">
+    <meta name="author" content="Automated HR Recruitment & Screening">
+    <title>📊 HR Dashboard — ระบบคัดกรองผู้สมัคร</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ===== Design Tokens ===== */
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #111128;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --bg-glass: rgba(255, 255, 255, 0.06);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-glass-hover: rgba(255, 255, 255, 0.15);
+            --text-primary: #f1f0f9;
+            --text-secondary: #a5a3c2;
+            --text-muted: #6b6890;
+            --accent-purple: #7c3aed;
+            --accent-purple-light: #a78bfa;
+            --accent-indigo: #1e1b4b;
+            --accent-blue: #3b82f6;
+            --color-success: #22c55e;
+            --color-success-bg: rgba(34, 197, 94, 0.12);
+            --color-success-border: rgba(34, 197, 94, 0.25);
+            --color-warning: #f59e0b;
+            --color-warning-bg: rgba(245, 158, 11, 0.12);
+            --color-warning-border: rgba(245, 158, 11, 0.25);
+            --color-danger: #ef4444;
+            --color-danger-bg: rgba(239, 68, 68, 0.12);
+            --color-danger-border: rgba(239, 68, 68, 0.25);
+            --color-info: #6366f1;
+            --color-info-bg: rgba(99, 102, 241, 0.12);
+            --color-info-border: rgba(99, 102, 241, 0.25);
+            --gradient-main: linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #4c1d95 60%, #1e1b4b 100%);
+            --gradient-accent: linear-gradient(135deg, #7c3aed, #a78bfa, #6366f1);
+            --gradient-card: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(99, 102, 241, 0.04));
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.15);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* ===== Reset & Base ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ===== Animated Background ===== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 40% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            animation: bgDrift 25s ease-in-out infinite alternate;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+        }
+
+        .bg-orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: rgba(124, 58, 237, 0.15);
+            top: -10%;
+            right: -5%;
+            animation: orbFloat1 20s ease-in-out infinite;
+        }
+
+        .bg-orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: rgba(99, 102, 241, 0.1);
+            bottom: 10%;
+            left: -10%;
+            animation: orbFloat2 25s ease-in-out infinite;
+        }
+
+        .bg-orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: rgba(139, 92, 246, 0.08);
+            top: 50%;
+            left: 50%;
+            animation: orbFloat3 18s ease-in-out infinite;
+        }
+
+        @keyframes bgDrift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-3%, 3%) rotate(3deg); }
+        }
+
+        @keyframes orbFloat1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-30px, 40px) scale(1.05); }
+            66% { transform: translate(20px, -20px) scale(0.95); }
+        }
+
+        @keyframes orbFloat2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.1); }
+        }
+
+        @keyframes orbFloat3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-50px, 30px); }
+        }
+
+        /* ===== Main Container ===== */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 16px 0;
+            margin-bottom: 32px;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 28px;
+            background: rgba(17, 17, 40, 0.85);
+            backdrop-filter: blur(24px) saturate(1.5);
+            -webkit-backdrop-filter: blur(24px) saturate(1.5);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-logo {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-glass);
+        }
+
+        .header-date span {
+            color: var(--accent-purple-light);
+            font-weight: 600;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            background: rgba(124, 58, 237, 0.12);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: rgba(124, 58, 237, 0.25);
+            border-color: rgba(124, 58, 237, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);
+        }
+
+        .btn-settings {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-settings:hover {
+            background: rgba(124, 58, 237, 0.15);
+            border-color: rgba(124, 58, 237, 0.4);
+            color: var(--accent-purple-light);
+            transform: rotate(45deg);
+        }
+
+        /* ===== Stat Cards ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            position: relative;
+            padding: 28px 24px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            overflow: hidden;
+            transition: all var(--transition-smooth);
+            cursor: default;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            opacity: 0.8;
+        }
+
+        .stat-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-glass-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card--total::before { background: var(--gradient-accent); }
+        .stat-card--total:hover { box-shadow: var(--shadow-lg), 0 0 30px rgba(124, 58, 237, 0.1); }
+        .stat-card--pending::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .stat-card--pending:hover { box-shadow: var(--shadow-lg), 0 0 30px rgba(245, 158, 11, 0.1); }
+        .stat-card--passed::before { background: linear-gradient(90deg, #22c55e, #4ade80); }
+        .stat-card--passed:hover { box-shadow: var(--shadow-lg), 0 0 30px rgba(34, 197, 94, 0.1); }
+        .stat-card--failed::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .stat-card--failed:hover { box-shadow: var(--shadow-lg), 0 0 30px rgba(239, 68, 68, 0.1); }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .stat-card-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+        }
+
+        .stat-card-icon {
+            font-size: 28px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .stat-card-value {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-card--total .stat-card-value {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-card--pending .stat-card-value { color: var(--color-warning); }
+        .stat-card--passed .stat-card-value { color: var(--color-success); }
+        .stat-card--failed .stat-card-value { color: var(--color-danger); }
+
+        .stat-card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .stat-card-ring {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            opacity: 0.04;
+        }
+
+        .stat-card--total .stat-card-ring { background: var(--accent-purple); }
+        .stat-card--pending .stat-card-ring { background: var(--color-warning); }
+        .stat-card--passed .stat-card-ring { background: var(--color-success); }
+        .stat-card--failed .stat-card-ring { background: var(--color-danger); }
+
+        /* ===== Charts Section ===== */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            padding: 28px 24px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            transition: all var(--transition-smooth);
+        }
+
+        .chart-card:hover {
+            border-color: var(--border-glass-hover);
+        }
+
+        .chart-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Donut Chart */
+        .donut-chart-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .donut-chart {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut-chart svg {
+            width: 180px;
+            height: 180px;
+            transform: rotate(-90deg);
+        }
+
+        .donut-chart svg circle {
+            fill: none;
+            stroke-width: 28;
+            cx: 90;
+            cy: 90;
+            r: 70;
+            transition: stroke-dasharray 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .donut-center {
+            position: absolute;
+            text-align: center;
+        }
+
+        .donut-center-value {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .donut-center-label {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .donut-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .donut-legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .donut-legend-value {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-left: auto;
+            min-width: 28px;
+            text-align: right;
+        }
+
+        /* Bar Chart */
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding-top: 4px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bar-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            min-width: 0;
+        }
+
+        .bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+            animation: barShimmer 2s infinite;
+        }
+
+        @keyframes barShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .bar-count {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            min-width: 24px;
+            text-align: right;
+        }
+
+        /* ===== Filter Bar ===== */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .filter-bar .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .filter-input,
+        .filter-select {
+            padding: 10px 16px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+
+        .filter-input {
+            width: 100%;
+            padding-left: 42px;
+        }
+
+        .filter-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            border-color: var(--accent-purple);
+            background: rgba(124, 58, 237, 0.06);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .filter-select {
+            min-width: 160px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a5a3c2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .filter-select option {
+            background: #1e1b3a;
+            color: var(--text-primary);
+        }
+
+        .btn-bot {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-bot::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-bot:hover::before {
+            left: 100%;
+        }
+
+        .btn-bot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(124, 58, 237, 0.35);
+        }
+
+        .btn-bot:active {
+            transform: translateY(0);
+        }
+
+        /* ===== Action Bar (Export/Batch/AutoRefresh) ===== */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .action-bar-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-bar-divider {
+            width: 1px;
+            height: 28px;
+            background: var(--border-glass);
+            margin: 0 4px;
+        }
+
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .btn-export:hover {
+            background: rgba(124, 58, 237, 0.12);
+            border-color: rgba(124, 58, 237, 0.3);
+            color: var(--accent-purple-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-batch {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-batch.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-batch:hover {
+            background: rgba(124, 58, 237, 0.12);
+            border-color: rgba(124, 58, 237, 0.3);
+            color: var(--accent-purple-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-batch-danger:hover {
+            background: var(--color-danger-bg);
+            border-color: var(--color-danger-border);
+            color: var(--color-danger);
+        }
+
+        .batch-status-select {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            outline: none;
+            cursor: pointer;
+            opacity: 0.5;
+            pointer-events: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a5a3c2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+        }
+
+        .batch-status-select.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .batch-status-select option {
+            background: #1e1b3a;
+            color: var(--text-primary);
+        }
+
+        .selected-count {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-purple-light);
+            padding: 4px 12px;
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 20px;
+            display: none;
+        }
+
+        .selected-count.show {
+            display: inline-flex;
+        }
+
+        /* Auto-refresh */
+        .auto-refresh-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            transition: all var(--transition-fast);
+            border: 1px solid var(--border-glass);
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: rgba(124, 58, 237, 0.3);
+            border-color: rgba(124, 58, 237, 0.5);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(18px);
+            background: var(--accent-purple-light);
+        }
+
+        .auto-refresh-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .countdown-timer {
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Inter', monospace;
+            color: var(--accent-purple-light);
+            padding: 3px 8px;
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 6px;
+            min-width: 32px;
+            text-align: center;
+            display: none;
+        }
+
+        .countdown-timer.show {
+            display: inline-block;
+        }
+
+        /* ===== Data Table ===== */
+        .table-wrapper {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .table-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .table-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .table-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        thead th {
+            padding: 14px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            text-align: left;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(255, 255, 255, 0.02);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+        }
+
+        tbody tr {
+            transition: all var(--transition-fast);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        tbody tr:hover {
+            background: rgba(124, 58, 237, 0.06);
+        }
+
+        tbody tr.selected {
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        tbody td {
+            padding: 14px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            vertical-align: middle;
+        }
+
+        .td-checkbox {
+            width: 40px;
+            text-align: center;
+        }
+
+        .td-checkbox input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--accent-purple);
+        }
+
+        thead th.td-checkbox {
+            width: 40px;
+            text-align: center;
+        }
+
+        .td-id {
+            font-family: 'Inter', monospace;
+            font-weight: 600;
+            color: var(--accent-purple-light);
+            font-size: 12px;
+        }
+
+        .td-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .td-email {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .td-position {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        /* GPA Colors */
+        .gpa-high { color: var(--color-success); font-weight: 700; }
+        .gpa-mid { color: var(--color-warning); font-weight: 700; }
+        .gpa-low { color: var(--color-danger); font-weight: 700; }
+
+        /* Skill Tags */
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 20px;
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+
+        .skill-tag:hover { transform: scale(1.05); }
+
+        .skill-tag--purple { color: #c4b5fd; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.25); }
+        .skill-tag--blue { color: #93c5fd; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.25); }
+        .skill-tag--cyan { color: #67e8f9; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.25); }
+        .skill-tag--green { color: #86efac; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.25); }
+        .skill-tag--orange { color: #fdba74; background: rgba(249, 115, 22, 0.15); border: 1px solid rgba(249, 115, 22, 0.25); }
+        .skill-tag--pink { color: #f9a8d4; background: rgba(236, 72, 153, 0.15); border: 1px solid rgba(236, 72, 153, 0.25); }
+        .skill-tag--teal { color: #5eead4; background: rgba(20, 184, 166, 0.15); border: 1px solid rgba(20, 184, 166, 0.25); }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .status-badge--pending { color: var(--color-warning); background: var(--color-warning-bg); border: 1px solid var(--color-warning-border); }
+        .status-badge--passed { color: var(--color-success); background: var(--color-success-bg); border: 1px solid var(--color-success-border); }
+        .status-badge--failed { color: var(--color-danger); background: var(--color-danger-bg); border: 1px solid var(--color-danger-border); }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-badge--pending .status-dot { background: var(--color-warning); animation: pulse-dot 2s ease-in-out infinite; box-shadow: 0 0 6px var(--color-warning); }
+        .status-badge--passed .status-dot { background: var(--color-success); }
+        .status-badge--failed .status-dot { background: var(--color-danger); }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        .td-bot-note {
+            font-size: 12px;
+            color: var(--text-muted);
+            max-width: 180px;
+            font-style: italic;
+        }
+
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-glass);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .btn-view {
+            color: var(--accent-purple-light);
+            background: rgba(124, 58, 237, 0.1);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+
+        .btn-view:hover {
+            background: rgba(124, 58, 237, 0.2);
+            border-color: rgba(124, 58, 237, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+        }
+
+        .btn-delete {
+            color: var(--color-danger);
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.18);
+            border-color: rgba(239, 68, 68, 0.35);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .empty-state-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state-title { font-size: 18px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
+        .empty-state-desc { font-size: 14px; color: var(--text-muted); }
+
+        /* ===== Modal Overlay ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-smooth);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            position: relative;
+            width: 90%;
+            max-width: 620px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 36px;
+            background: rgba(17, 17, 40, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border-glass-hover);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+            transform: scale(0.9) translateY(20px);
+            transition: all var(--transition-spring);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            color: var(--color-danger);
+            background: var(--color-danger-bg);
+            border-color: var(--color-danger-border);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        /* ===== Detail Modal ===== */
+        .detail-section { margin-bottom: 20px; }
+
+        .detail-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-status-select {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            outline: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .detail-status-select:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .detail-status-select option {
+            background: #1e1b3a;
+            color: var(--text-primary);
+        }
+
+        .btn-save-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 24px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-top: 8px;
+        }
+
+        .btn-save-status:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Timeline */
+        .timeline { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-glass); }
+        .timeline-title { font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 16px; }
+
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding-bottom: 16px;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-glass);
+        }
+
+        .timeline-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+            background: rgba(124, 58, 237, 0.15);
+            border: 2px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .timeline-content { flex: 1; }
+        .timeline-text { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+        .timeline-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* ===== Bot Screening Modal ===== */
+        .bot-modal-content { text-align: center; }
+
+        .bot-robot {
+            font-size: 72px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: robotBounce 1.2s ease-in-out infinite;
+        }
+
+        @keyframes robotBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-3deg); }
+            75% { transform: translateY(-4px) rotate(3deg); }
+        }
+
+        .bot-status-text { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 24px; }
+
+        .bot-progress-bar-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .bot-progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-accent);
+            border-radius: 4px;
+            transition: width 0.4s ease;
+            position: relative;
+        }
+
+        .bot-progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .bot-current-item { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; min-height: 20px; }
+        .bot-progress-text { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+
+        .bot-result {
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-glass);
+        }
+
+        .bot-result-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+
+        .bot-result-row { display: flex; justify-content: center; gap: 32px; margin-bottom: 16px; }
+        .bot-result-stat { text-align: center; }
+        .bot-result-stat-value { font-size: 32px; font-weight: 800; line-height: 1; }
+        .bot-result-stat-value.passed { color: var(--color-success); }
+        .bot-result-stat-value.failed { color: var(--color-danger); }
+        .bot-result-stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+        .btn-close-bot {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 28px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-close-bot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+        }
+
+        /* Confetti */
+        .confetti-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+        .confetti { position: absolute; width: 6px; height: 6px; border-radius: 50%; opacity: 0; }
+
+        /* ===== Settings Panel ===== */
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1100;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-smooth);
+        }
+
+        .settings-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .settings-panel {
+            width: 420px;
+            max-width: 90vw;
+            height: 100vh;
+            background: rgba(17, 17, 40, 0.97);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-left: 1px solid var(--border-glass-hover);
+            padding: 32px;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: all var(--transition-spring);
+        }
+
+        .settings-overlay.active .settings-panel {
+            transform: translateX(0);
+        }
+
+        .settings-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-section {
+            margin-bottom: 28px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 16px;
+        }
+
+        .settings-input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: all var(--transition-fast);
+            margin-bottom: 12px;
+        }
+
+        .settings-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .settings-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .settings-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .settings-row-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .btn-settings-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .btn-settings-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-settings-action--success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-settings-action--success:hover {
+            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+        }
+
+        .settings-status {
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-glass);
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===== Delete Confirm Modal ===== */
+        .delete-modal-btns {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-cancel:hover { background: rgba(255,255,255,0.08); }
+
+        .btn-confirm-delete {
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-confirm-delete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        /* ===== Toast Notification ===== */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: rgba(17, 17, 40, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            box-shadow: var(--shadow-lg);
+            transform: translateX(120%);
+            transition: all var(--transition-spring);
+            max-width: 360px;
+        }
+
+        .toast.show { transform: translateX(0); }
+        .toast--success { border-left: 4px solid var(--color-success); }
+        .toast--error { border-left: 4px solid var(--color-danger); }
+        .toast--info { border-left: 4px solid var(--accent-purple); }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(124, 58, 237, 0.5); }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-section { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .app-container { padding: 0 12px 40px; }
+            .header-inner { flex-direction: column; gap: 12px; padding: 16px; }
+            .header-left, .header-right { width: 100%; justify-content: center; flex-wrap: wrap; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .stat-card { padding: 20px 16px; }
+            .stat-card-value { font-size: 30px; }
+            .filter-bar { flex-direction: column; padding: 16px; }
+            .filter-bar .search-wrapper, .filter-select { width: 100%; min-width: 0; }
+            .btn-bot { width: 100%; justify-content: center; }
+            .detail-grid { grid-template-columns: 1fr; }
+            .modal { padding: 24px; width: 95%; }
+            .action-bar { flex-direction: column; align-items: stretch; }
+            .action-bar-group { flex-wrap: wrap; }
+            .action-bar-divider { display: none; }
+            .auto-refresh-group { margin-left: 0; }
+            .donut-chart-wrapper { flex-direction: column; gap: 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .header-title { font-size: 15px; }
+        }
+
+        /* ===== Print Styles ===== */
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+            body {
+                background: #fff !important;
+                color: #1a1a2e !important;
+                font-size: 11pt;
+            }
+
+            .bg-animation, .bg-orb, .modal-overlay, .toast-container, .settings-overlay,
+            .filter-bar, .action-bar, .btn-bot, .btn-action, .btn-view, .btn-delete,
+            .action-btns, .btn-settings, .td-checkbox, .header-right .nav-link,
+            .header-right .btn-settings { display: none !important; }
+
+            .app-container {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .header {
+                position: relative;
+                margin-bottom: 20px;
+            }
+
+            .header-inner {
+                background: none !important;
+                backdrop-filter: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0;
+                border-bottom: 2px solid #1a1a2e !important;
+                border-radius: 0;
+                padding-bottom: 10px;
+            }
+
+            .header-title {
+                -webkit-text-fill-color: #1a1a2e !important;
+                background: none !important;
+                color: #1a1a2e !important;
+                font-size: 16pt;
+            }
+
+            .header-subtitle { color: #666 !important; }
+            .header-date span { color: #333 !important; }
+            .header-date { background: none !important; border: none !important; padding: 0; }
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .stat-card {
+                background: #f8f8fc !important;
+                backdrop-filter: none !important;
+                border: 1px solid #ddd !important;
+                padding: 16px;
+                page-break-inside: avoid;
+            }
+
+            .stat-card::before { display: none; }
+
+            .stat-card-value {
+                font-size: 28px;
+                -webkit-text-fill-color: initial !important;
+                background: none !important;
+            }
+
+            .stat-card--total .stat-card-value { color: #6d28d9 !important; -webkit-text-fill-color: #6d28d9 !important; }
+            .stat-card--pending .stat-card-value { color: #d97706 !important; }
+            .stat-card--passed .stat-card-value { color: #16a34a !important; }
+            .stat-card--failed .stat-card-value { color: #dc2626 !important; }
+
+            .stat-card-ring { display: none; }
+
+            .charts-section {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
+            .chart-card {
+                background: #f8f8fc !important;
+                backdrop-filter: none !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+
+            .table-wrapper {
+                background: none !important;
+                backdrop-filter: none !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+
+            .table-header-bar {
+                border-bottom: 2px solid #333 !important;
+                padding: 10px 0;
+            }
+
+            .table-title {
+                color: #1a1a2e !important;
+                font-size: 13pt;
+            }
+
+            table {
+                min-width: auto;
+                font-size: 9pt;
+            }
+
+            thead th {
+                background: #e8e8f0 !important;
+                color: #333 !important;
+                padding: 8px 6px;
+                border-bottom: 2px solid #333 !important;
+            }
+
+            tbody td {
+                color: #333 !important;
+                padding: 6px;
+                border-bottom: 1px solid #ddd !important;
+            }
+
+            .td-id { color: #6d28d9 !important; }
+            .td-name { color: #1a1a2e !important; }
+            .td-email { color: #666 !important; }
+
+            .skill-tag {
+                background: #eef !important;
+                color: #333 !important;
+                border: 1px solid #ccc !important;
+                font-size: 8pt;
+            }
+
+            .status-badge {
+                font-size: 9pt;
+                border: 1px solid #ccc !important;
+            }
+
+            .status-badge--passed { color: #16a34a !important; background: #e8fce8 !important; }
+            .status-badge--failed { color: #dc2626 !important; background: #fce8e8 !important; }
+            .status-badge--pending { color: #d97706 !important; background: #fef3e8 !important; }
+
+            .status-dot { display: none; }
+
+            @page {
+                size: A4 landscape;
+                margin: 15mm;
+            }
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in { animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
+        .animate-delay-1 { animation-delay: 0.08s; }
+        .animate-delay-2 { animation-delay: 0.16s; }
+        .animate-delay-3 { animation-delay: 0.24s; }
+        .animate-delay-4 { animation-delay: 0.32s; }
+        .animate-delay-5 { animation-delay: 0.40s; }
+        .animate-delay-6 { animation-delay: 0.48s; }
+        .animate-delay-7 { animation-delay: 0.56s; }
+        .animate-delay-8 { animation-delay: 0.64s; }
+
+        @keyframes rowFadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .row-animate { animation: rowFadeIn 0.3s ease both; }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- ===== Header ===== -->
+        <header class="header animate-in">
+            <div class="header-inner">
+                <div class="header-left">
+                    <span class="header-logo">📊</span>
+                    <div>
+                        <div class="header-title">HR Dashboard — ระบบคัดกรองผู้สมัคร</div>
+                        <div class="header-subtitle">Automated Recruitment & Screening Platform</div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-date" id="headerDate">
+                        📅 <span id="currentDate"></span>
+                    </div>
+                    <button class="btn-settings" id="btnOpenSettings" type="button" aria-label="ตั้งค่า" title="ตั้งค่า Google Sheets Sync">⚙️</button>
+                    <a href="index.html" class="nav-link" id="navFormLink">
+                        📝 ฟอร์มรับสมัคร
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== Statistics Cards ===== -->
+        <section class="stats-grid" aria-label="สถิติผู้สมัคร">
+            <div class="stat-card stat-card--total animate-in animate-delay-1" id="statTotal">
+                <div class="stat-card-header">
+                    <span class="stat-card-label">ผู้สมัครทั้งหมด</span>
+                    <span class="stat-card-icon">👥</span>
+                </div>
+                <div class="stat-card-value" id="statTotalValue">0</div>
+                <div class="stat-card-desc">จำนวนผู้สมัครในระบบ</div>
+                <div class="stat-card-ring"></div>
+            </div>
+            <div class="stat-card stat-card--pending animate-in animate-delay-2" id="statPending">
+                <div class="stat-card-header">
+                    <span class="stat-card-label">รอตรวจสอบ</span>
+                    <span class="stat-card-icon">⏳</span>
+                </div>
+                <div class="stat-card-value" id="statPendingValue">0</div>
+                <div class="stat-card-desc">รอการคัดกรองจากบอท</div>
+                <div class="stat-card-ring"></div>
+            </div>
+            <div class="stat-card stat-card--passed animate-in animate-delay-3" id="statPassed">
+                <div class="stat-card-header">
+                    <span class="stat-card-label">ผ่านการคัดกรอง</span>
+                    <span class="stat-card-icon">✅</span>
+                </div>
+                <div class="stat-card-value" id="statPassedValue">0</div>
+                <div class="stat-card-desc">ผู้สมัครที่ผ่านเกณฑ์</div>
+                <div class="stat-card-ring"></div>
+            </div>
+            <div class="stat-card stat-card--failed animate-in animate-delay-4" id="statFailed">
+                <div class="stat-card-header">
+                    <span class="stat-card-label">ไม่ผ่านการคัดกรอง</span>
+                    <span class="stat-card-icon">❌</span>
+                </div>
+                <div class="stat-card-value" id="statFailedValue">0</div>
+                <div class="stat-card-desc">ผู้สมัครที่ไม่ผ่านเกณฑ์</div>
+                <div class="stat-card-ring"></div>
+            </div>
+        </section>
+
+        <!-- ===== Charts Section ===== -->
+        <section class="charts-section animate-in animate-delay-5" id="chartsSection" aria-label="กราฟสถิติ">
+            <div class="chart-card" id="donutChartCard">
+                <div class="chart-card-title">🍩 สัดส่วนผู้สมัครตามสถานะ</div>
+                <div class="donut-chart-wrapper">
+                    <div class="donut-chart" id="donutChart">
+                        <svg viewBox="0 0 180 180">
+                            <circle id="donutFailed" stroke="#ef4444" stroke-dasharray="0 440" stroke-dashoffset="0"></circle>
+                            <circle id="donutPending" stroke="#f59e0b" stroke-dasharray="0 440" stroke-dashoffset="0"></circle>
+                            <circle id="donutPassed" stroke="#22c55e" stroke-dasharray="0 440" stroke-dashoffset="0"></circle>
+                        </svg>
+                        <div class="donut-center">
+                            <div class="donut-center-value" id="donutTotal">0</div>
+                            <div class="donut-center-label">ทั้งหมด</div>
+                        </div>
+                    </div>
+                    <div class="donut-legend">
+                        <div class="donut-legend-item">
+                            <span class="donut-legend-dot" style="background: #22c55e;"></span>
+                            <span>ผ่านการคัดกรอง</span>
+                            <span class="donut-legend-value" id="legendPassed">0</span>
+                        </div>
+                        <div class="donut-legend-item">
+                            <span class="donut-legend-dot" style="background: #f59e0b;"></span>
+                            <span>รอตรวจสอบ</span>
+                            <span class="donut-legend-value" id="legendPending">0</span>
+                        </div>
+                        <div class="donut-legend-item">
+                            <span class="donut-legend-dot" style="background: #ef4444;"></span>
+                            <span>ไม่ผ่านการคัดกรอง</span>
+                            <span class="donut-legend-value" id="legendFailed">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card" id="barChartCard">
+                <div class="chart-card-title">📊 จำนวนผู้สมัครตามตำแหน่ง</div>
+                <div class="bar-chart" id="barChart">
+                    <!-- Dynamically filled -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Filter Bar ===== -->
+        <div class="filter-bar animate-in animate-delay-6" id="filterBar">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="filter-input" id="searchInput" placeholder="ค้นหาชื่อ หรือ อีเมล..." autocomplete="off" aria-label="ค้นหาผู้สมัคร">
+            </div>
+            <select class="filter-select" id="filterStatus" aria-label="กรองตามสถานะ">
+                <option value="">📋 สถานะทั้งหมด</option>
+                <option value="รอตรวจสอบ">⏳ รอตรวจสอบ</option>
+                <option value="ผ่านการคัดกรอง">✅ ผ่านการคัดกรอง</option>
+                <option value="ไม่ผ่านการคัดกรอง">❌ ไม่ผ่านการคัดกรอง</option>
+            </select>
+            <select class="filter-select" id="filterPosition" aria-label="กรองตามตำแหน่ง">
+                <option value="">💼 ตำแหน่งทั้งหมด</option>
+            </select>
+            <button class="btn-bot" id="btnRunBot" type="button" aria-label="รันบอทคัดกรอง">
+                🤖 รันบอทคัดกรอง
+            </button>
+        </div>
+
+        <!-- ===== Action Bar (Export, Batch, Auto-refresh) ===== -->
+        <div class="action-bar animate-in animate-delay-7" id="actionBar">
+            <div class="action-bar-group">
+                <button class="btn-export" id="btnExportCSV" type="button" aria-label="ส่งออก CSV">📄 ส่งออก CSV</button>
+                <button class="btn-export" id="btnExportJSON" type="button" aria-label="ส่งออก JSON">📋 ส่งออก JSON</button>
+                <button class="btn-export" id="btnPrintReport" type="button" aria-label="พิมพ์รายงาน">🖨️ พิมพ์รายงาน</button>
+            </div>
+            <div class="action-bar-divider"></div>
+            <div class="action-bar-group">
+                <span class="selected-count" id="selectedCount">เลือก 0 รายการ</span>
+                <select class="batch-status-select" id="batchStatusSelect">
+                    <option value="">เลือกสถานะ</option>
+                    <option value="รอตรวจสอบ">⏳ รอตรวจสอบ</option>
+                    <option value="ผ่านการคัดกรอง">✅ ผ่านการคัดกรอง</option>
+                    <option value="ไม่ผ่านการคัดกรอง">❌ ไม่ผ่านการคัดกรอง</option>
+                </select>
+                <button class="btn-batch" id="btnBatchStatus" type="button">🔄 เปลี่ยนสถานะที่เลือก</button>
+                <button class="btn-batch btn-batch-danger" id="btnBatchDelete" type="button">🗑️ ลบที่เลือก</button>
+            </div>
+            <div class="action-bar-divider"></div>
+            <div class="auto-refresh-group">
+                <span class="auto-refresh-label">รีเฟรชอัตโนมัติ</span>
+                <label class="toggle-switch" id="autoRefreshToggleLabel">
+                    <input type="checkbox" id="autoRefreshToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="countdown-timer" id="countdownTimer">30</span>
+            </div>
+        </div>
+
+        <!-- ===== Applicant Table ===== -->
+        <div class="table-wrapper animate-in animate-delay-8" id="tableWrapper">
+            <div class="table-header-bar">
+                <span class="table-title">📋 รายชื่อผู้สมัครงาน</span>
+                <span class="table-count" id="tableCount">0 รายการ</span>
+            </div>
+            <div class="table-scroll">
+                <table id="applicantTable" aria-label="ตารางข้อมูลผู้สมัคร">
+                    <thead>
+                        <tr>
+                            <th class="td-checkbox"><input type="checkbox" id="selectAllCheckbox" aria-label="เลือกทั้งหมด"></th>
+                            <th>ID</th>
+                            <th>ชื่อ-สกุล</th>
+                            <th>อีเมล</th>
+                            <th>ตำแหน่ง</th>
+                            <th>GPA</th>
+                            <th>ทักษะ</th>
+                            <th>ประสบการณ์</th>
+                            <th>สถานะ</th>
+                            <th>หมายเหตุจากบอท</th>
+                            <th>การจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicantTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Settings Panel (Google Sheets Sync) ===== -->
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-title">⚙️ ตั้งค่าระบบ</div>
+
+            <div class="settings-section">
+                <div class="settings-section-title">🔗 Google Sheets Sync</div>
+                <label class="settings-label" for="settingsWebAppUrl">Google Apps Script Web App URL</label>
+                <input type="url" class="settings-input" id="settingsWebAppUrl" placeholder="https://script.google.com/macros/s/...">
+
+                <div class="settings-row">
+                    <span class="settings-row-label">ซิงค์จาก Google Sheets</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="settingsSyncToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <button class="btn-settings-action" id="btnFetchSheets" type="button">📥 ดึงข้อมูลจาก Sheets</button>
+                <button class="btn-settings-action btn-settings-action--success" id="btnUploadSheets" type="button">📤 อัพโหลดสถานะกลับ Sheets</button>
+
+                <div class="settings-status" id="settingsSyncStatus">ℹ️ ยังไม่ได้เชื่อมต่อ</div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-section-title">💾 ข้อมูลในเครื่อง</div>
+                <button class="btn-settings-action" id="btnResetData" type="button" style="background: linear-gradient(135deg, #ef4444, #dc2626); border-color: rgba(239, 68, 68, 0.4);">🗑️ รีเซ็ตข้อมูลทั้งหมด</button>
+            </div>
+
+            <button class="btn-cancel" id="btnCloseSettings" type="button" style="width: 100%; text-align: center;">✕ ปิดตั้งค่า</button>
+        </div>
+    </div>
+
+    <!-- ===== Detail Modal ===== -->
+    <div class="modal-overlay" id="detailModalOverlay" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+        <div class="modal" id="detailModal">
+            <button class="modal-close" id="detailModalClose" aria-label="ปิด">✕</button>
+            <h2 class="modal-title" id="detailModalTitle">📄 รายละเอียดผู้สมัคร</h2>
+            <div id="detailContent">
+                <!-- Dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Bot Screening Modal ===== -->
+    <div class="modal-overlay" id="botModalOverlay" role="dialog" aria-modal="true" aria-label="การคัดกรองผู้สมัคร">
+        <div class="modal" id="botModal">
+            <div class="bot-modal-content" id="botModalContent">
+                <div class="confetti-container" id="confettiContainer"></div>
+                <div class="bot-robot" id="botRobot">🤖</div>
+                <div class="bot-status-text" id="botStatusText">กำลังเตรียมระบบคัดกรอง...</div>
+                <div class="bot-progress-bar-track">
+                    <div class="bot-progress-bar-fill" id="botProgressFill"></div>
+                </div>
+                <div class="bot-current-item" id="botCurrentItem"></div>
+                <div class="bot-progress-text" id="botProgressText">0%</div>
+                <div class="bot-result" id="botResult" style="display: none;">
+                    <div class="bot-result-title">📊 ผลการคัดกรอง</div>
+                    <div class="bot-result-row">
+                        <div class="bot-result-stat">
+                            <div class="bot-result-stat-value passed" id="botPassedCount">0</div>
+                            <div class="bot-result-stat-label">✅ ผ่านการคัดกรอง</div>
+                        </div>
+                        <div class="bot-result-stat">
+                            <div class="bot-result-stat-value failed" id="botFailedCount">0</div>
+                            <div class="bot-result-stat-label">❌ ไม่ผ่านการคัดกรอง</div>
+                        </div>
+                    </div>
+                    <button class="btn-close-bot" id="btnCloseBot" type="button">✨ ปิดและดูผลลัพธ์</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Delete Confirm Modal ===== -->
+    <div class="modal-overlay" id="deleteModalOverlay" role="dialog" aria-modal="true" aria-label="ยืนยันการลบ">
+        <div class="modal" style="max-width: 440px;">
+            <button class="modal-close" id="deleteModalClose" aria-label="ปิด">✕</button>
+            <h2 class="modal-title">🗑️ ยืนยันการลบ</h2>
+            <p style="color: var(--text-secondary); font-size: 14px;" id="deleteMessage">คุณต้องการลบผู้สมัครรายนี้หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+            <div class="delete-modal-btns">
+                <button class="btn-cancel" id="btnCancelDelete" type="button">ยกเลิก</button>
+                <button class="btn-confirm-delete" id="btnConfirmDelete" type="button">🗑️ ลบผู้สมัคร</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Toast Container ===== -->
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+    <script>
+        /* ============================================================
+           DATA LAYER
+        ============================================================ */
+        const STORAGE_KEY = 'applicants';
+
+        const SEED_DATA = [
+            {
+                id: 'APP-001',
+                name: 'สมชาย ใจดี',
+                email: 'somchai@email.com',
+                position: 'Software Developer',
+                gpa: 3.85,
+                skills: ['Python', 'JavaScript', 'Git'],
+                experience: 3,
+                status: 'ผ่านการคัดกรอง',
+                botNote: 'ผ่านเกณฑ์ GPA ขั้นต่ำ',
+                timeline: [
+                    { action: 'สมัครเข้าระบบ', time: '2026-07-14 09:00' },
+                    { action: 'บอทคัดกรอง: ผ่านการคัดกรอง', time: '2026-07-14 09:05' }
+                ]
+            },
+            {
+                id: 'APP-002',
+                name: 'สมหญิง รักเรียน',
+                email: 'somying@email.com',
+                position: 'Data Analyst',
+                gpa: 3.92,
+                skills: ['Python', 'SQL', 'Power BI'],
+                experience: 2,
+                status: 'ผ่านการคัดกรอง',
+                botNote: 'ผ่านเกณฑ์ GPA ขั้นต่ำ',
+                timeline: [
+                    { action: 'สมัครเข้าระบบ', time: '2026-07-14 10:30' },
+                    { action: 'บอทคัดกรอง: ผ่านการคัดกรอง', time: '2026-07-14 10:35' }
+                ]
+            },
+            {
+                id: 'APP-003',
+                name: 'วิชัย สร้างสรรค์',
+                email: 'wichai@email.com',
+                position: 'UX/UI Designer',
+                gpa: 2.45,
+                skills: ['Figma', 'JavaScript'],
+                experience: 1,
+                status: 'ไม่ผ่านการคัดกรอง',
+                botNote: 'GPA ต่ำกว่าเกณฑ์ขั้นต่ำ 3.00',
+                timeline: [
+                    { action: 'สมัครเข้าระบบ', time: '2026-07-15 08:15' },
+                    { action: 'บอทคัดกรอง: ไม่ผ่านการคัดกรอง', time: '2026-07-15 08:20' }
+                ]
+            },
+            {
+                id: 'APP-004',
+                name: 'พิมพ์ใจ เก่งมาก',
+                email: 'pimjai@email.com',
+                position: 'Project Manager',
+                gpa: 3.50,
+                skills: ['Python', 'Docker', 'Git'],
+                experience: 5,
+                status: 'รอตรวจสอบ',
+                botNote: '',
+                timeline: [
+                    { action: 'สมัครเข้าระบบ', time: '2026-07-16 06:00' }
+                ]
+            },
+            {
+                id: 'APP-005',
+                name: 'ธนาคม อัจฉริยะ',
+                email: 'thanakom@email.com',
+                position: 'System Engineer',
+                gpa: 3.10,
+                skills: ['Docker', 'Git', 'SQL'],
+                experience: 0,
+                status: 'รอตรวจสอบ',
+                botNote: '',
+                timeline: [
+                    { action: 'สมัครเข้าระบบ', time: '2026-07-16 06:05' }
+                ]
+            }
+        ];
+
+        function getApplicants() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (!data) {
+                    setApplicants(SEED_DATA);
+                    return SEED_DATA;
+                }
+                const parsed = JSON.parse(data);
+                if (!Array.isArray(parsed) || parsed.length === 0) {
+                    setApplicants(SEED_DATA);
+                    return SEED_DATA;
+                }
+                return parsed;
+            } catch (e) {
+                setApplicants(SEED_DATA);
+                return SEED_DATA;
+            }
+        }
+
+        function setApplicants(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        /* ============================================================
+           UTILITY
+        ============================================================ */
+        const SKILL_COLORS = ['purple', 'blue', 'cyan', 'green', 'orange', 'pink', 'teal'];
+        let skillColorMap = {};
+        let colorIndex = 0;
+
+        function getSkillColor(skill) {
+            if (!skillColorMap[skill]) {
+                skillColorMap[skill] = SKILL_COLORS[colorIndex % SKILL_COLORS.length];
+                colorIndex++;
+            }
+            return skillColorMap[skill];
+        }
+
+        function getGpaClass(gpa) {
+            if (gpa >= 3.0) return 'gpa-high';
+            if (gpa >= 2.5) return 'gpa-mid';
+            return 'gpa-low';
+        }
+
+        function getStatusBadgeClass(status) {
+            if (status === 'ผ่านการคัดกรอง') return 'status-badge--passed';
+            if (status === 'ไม่ผ่านการคัดกรอง') return 'status-badge--failed';
+            return 'status-badge--pending';
+        }
+
+        function formatDate(date) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('th-TH', options);
+        }
+
+        function getNowString() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            const h = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            return `${y}-${m}-${d} ${h}:${min}`;
+        }
+
+        /* Count-up animation */
+        function animateCount(el, target) {
+            const duration = 800;
+            const start = parseInt(el.textContent) || 0;
+            const diff = target - start;
+            if (diff === 0) { el.textContent = target; return; }
+            const startTime = performance.now();
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(start + diff * eased);
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        /* ============================================================
+           TOAST SYSTEM
+        ============================================================ */
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast--${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                });
+            });
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
+        /* ============================================================
+           RENDER
+        ============================================================ */
+        function renderStats() {
+            const applicants = getApplicants();
+            const total = applicants.length;
+            const pending = applicants.filter(a => a.status === 'รอตรวจสอบ').length;
+            const passed = applicants.filter(a => a.status === 'ผ่านการคัดกรอง').length;
+            const failed = applicants.filter(a => a.status === 'ไม่ผ่านการคัดกรอง').length;
+
+            animateCount(document.getElementById('statTotalValue'), total);
+            animateCount(document.getElementById('statPendingValue'), pending);
+            animateCount(document.getElementById('statPassedValue'), passed);
+            animateCount(document.getElementById('statFailedValue'), failed);
+        }
+
+        function renderPositionFilter() {
+            const applicants = getApplicants();
+            const positions = [...new Set(applicants.map(a => a.position))];
+            const select = document.getElementById('filterPosition');
+            const currentVal = select.value;
+            const existingOptions = new Set();
+            for (let i = 1; i < select.options.length; i++) {
+                existingOptions.add(select.options[i].value);
+            }
+            positions.forEach(pos => {
+                if (!existingOptions.has(pos)) {
+                    const opt = document.createElement('option');
+                    opt.value = pos;
+                    opt.textContent = pos;
+                    select.appendChild(opt);
+                }
+            });
+            select.value = currentVal;
+        }
+
+        /* Selected rows tracking */
+        let selectedIds = new Set();
+
+        function updateBatchButtons() {
+            const count = selectedIds.size;
+            const countEl = document.getElementById('selectedCount');
+            const batchStatusBtn = document.getElementById('btnBatchStatus');
+            const batchDeleteBtn = document.getElementById('btnBatchDelete');
+            const batchStatusSelect = document.getElementById('batchStatusSelect');
+
+            if (count > 0) {
+                countEl.textContent = `เลือก ${count} รายการ`;
+                countEl.classList.add('show');
+                batchStatusBtn.classList.add('active');
+                batchDeleteBtn.classList.add('active');
+                batchStatusSelect.classList.add('active');
+            } else {
+                countEl.classList.remove('show');
+                batchStatusBtn.classList.remove('active');
+                batchDeleteBtn.classList.remove('active');
+                batchStatusSelect.classList.remove('active');
+            }
+        }
+
+        function renderTable() {
+            const applicants = getApplicants();
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+            const statusFilter = document.getElementById('filterStatus').value;
+            const positionFilter = document.getElementById('filterPosition').value;
+
+            let filtered = applicants.filter(a => {
+                const matchSearch = !search || a.name.toLowerCase().includes(search) || a.email.toLowerCase().includes(search);
+                const matchStatus = !statusFilter || a.status === statusFilter;
+                const matchPosition = !positionFilter || a.position === positionFilter;
+                return matchSearch && matchStatus && matchPosition;
+            });
+
+            const tbody = document.getElementById('applicantTableBody');
+            document.getElementById('tableCount').textContent = `${filtered.length} รายการ`;
+
+            // Sync selectAll
+            const selectAllCb = document.getElementById('selectAllCheckbox');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="11">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <div class="empty-state-title">ไม่พบข้อมูลผู้สมัคร</div>
+                                <div class="empty-state-desc">ลองเปลี่ยนเงื่อนไขการค้นหาหรือตัวกรอง</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                selectAllCb.checked = false;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((a, idx) => {
+                const skillsHtml = (a.skills || []).map(s =>
+                    `<span class="skill-tag skill-tag--${getSkillColor(s)}">${s}</span>`
+                ).join('');
+
+                const statusClass = getStatusBadgeClass(a.status);
+                const gpaClass = getGpaClass(a.gpa);
+                const isChecked = selectedIds.has(a.id) ? 'checked' : '';
+                const isSelected = selectedIds.has(a.id) ? 'selected' : '';
+
+                return `
+                <tr class="row-animate ${isSelected}" style="animation-delay: ${idx * 0.04}s;" data-id="${a.id}">
+                    <td class="td-checkbox"><input type="checkbox" class="row-checkbox" data-id="${a.id}" ${isChecked} aria-label="เลือก ${a.name}"></td>
+                    <td class="td-id">${a.id}</td>
+                    <td class="td-name">${a.name}</td>
+                    <td class="td-email">${a.email}</td>
+                    <td class="td-position">${a.position}</td>
+                    <td><span class="${gpaClass}">${a.gpa.toFixed(2)}</span></td>
+                    <td><div class="skill-tags">${skillsHtml}</div></td>
+                    <td>${a.experience} ปี</td>
+                    <td>
+                        <span class="status-badge ${statusClass}">
+                            <span class="status-dot"></span>
+                            ${a.status}
+                        </span>
+                    </td>
+                    <td class="td-bot-note">${a.botNote || '—'}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-action btn-view" id="btnView_${a.id}" onclick="openDetail('${a.id}')" type="button" aria-label="ดูรายละเอียด ${a.name}">👁️ ดู</button>
+                            <button class="btn-action btn-delete" id="btnDelete_${a.id}" onclick="openDeleteConfirm('${a.id}')" type="button" aria-label="ลบ ${a.name}">🗑️</button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            // Attach checkbox events
+            document.querySelectorAll('.row-checkbox').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const id = this.dataset.id;
+                    if (this.checked) {
+                        selectedIds.add(id);
+                        this.closest('tr').classList.add('selected');
+                    } else {
+                        selectedIds.delete(id);
+                        this.closest('tr').classList.remove('selected');
+                    }
+                    updateBatchButtons();
+                    // Sync selectAll
+                    const allCbs = document.querySelectorAll('.row-checkbox');
+                    selectAllCb.checked = allCbs.length > 0 && [...allCbs].every(c => c.checked);
+                });
+            });
+
+            // Sync selectAll state
+            const allCbs = document.querySelectorAll('.row-checkbox');
+            selectAllCb.checked = allCbs.length > 0 && [...allCbs].every(c => c.checked);
+            updateBatchButtons();
+        }
+
+        /* ============================================================
+           CHARTS
+        ============================================================ */
+        const BAR_COLORS = [
+            'linear-gradient(90deg, #7c3aed, #a78bfa)',
+            'linear-gradient(90deg, #6366f1, #818cf8)',
+            'linear-gradient(90deg, #3b82f6, #60a5fa)',
+            'linear-gradient(90deg, #22c55e, #4ade80)',
+            'linear-gradient(90deg, #f59e0b, #fbbf24)',
+            'linear-gradient(90deg, #ef4444, #f87171)',
+            'linear-gradient(90deg, #ec4899, #f472b6)',
+            'linear-gradient(90deg, #06b6d4, #22d3ee)',
+        ];
+
+        function renderCharts() {
+            const applicants = getApplicants();
+            const total = applicants.length;
+            const passed = applicants.filter(a => a.status === 'ผ่านการคัดกรอง').length;
+            const pending = applicants.filter(a => a.status === 'รอตรวจสอบ').length;
+            const failed = applicants.filter(a => a.status === 'ไม่ผ่านการคัดกรอง').length;
+
+            // === Donut Chart ===
+            const circumference = 2 * Math.PI * 70; // ~439.8
+            const passedPct = total > 0 ? passed / total : 0;
+            const pendingPct = total > 0 ? pending / total : 0;
+            const failedPct = total > 0 ? failed / total : 0;
+
+            const passedLen = passedPct * circumference;
+            const pendingLen = pendingPct * circumference;
+            const failedLen = failedPct * circumference;
+
+            // We stack circles: failed at bottom, then pending, then passed on top
+            // Each circle needs dashoffset to position it after previous
+            const donutPassed = document.getElementById('donutPassed');
+            const donutPending = document.getElementById('donutPending');
+            const donutFailed = document.getElementById('donutFailed');
+
+            // Use timeout for animation effect
+            setTimeout(() => {
+                donutPassed.setAttribute('stroke-dasharray', `${passedLen} ${circumference}`);
+                donutPassed.setAttribute('stroke-dashoffset', '0');
+
+                donutPending.setAttribute('stroke-dasharray', `${pendingLen} ${circumference}`);
+                donutPending.setAttribute('stroke-dashoffset', `${-passedLen}`);
+
+                donutFailed.setAttribute('stroke-dasharray', `${failedLen} ${circumference}`);
+                donutFailed.setAttribute('stroke-dashoffset', `${-(passedLen + pendingLen)}`);
+            }, 200);
+
+            document.getElementById('donutTotal').textContent = total;
+            document.getElementById('legendPassed').textContent = passed;
+            document.getElementById('legendPending').textContent = pending;
+            document.getElementById('legendFailed').textContent = failed;
+
+            // === Bar Chart ===
+            const positionCounts = {};
+            applicants.forEach(a => {
+                positionCounts[a.position] = (positionCounts[a.position] || 0) + 1;
+            });
+
+            const entries = Object.entries(positionCounts).sort((a, b) => b[1] - a[1]);
+            const maxCount = entries.length > 0 ? entries[0][1] : 1;
+
+            const barChart = document.getElementById('barChart');
+            if (entries.length === 0) {
+                barChart.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px;font-size:13px;">ไม่มีข้อมูล</div>';
+                return;
+            }
+
+            barChart.innerHTML = entries.map((entry, i) => {
+                const [position, count] = entry;
+                const pct = (count / maxCount) * 100;
+                const color = BAR_COLORS[i % BAR_COLORS.length];
+                return `
+                    <div class="bar-item">
+                        <span class="bar-label" title="${position}">${position}</span>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 0%; background: ${color};" data-target-width="${pct}%">${count}</div>
+                        </div>
+                        <span class="bar-count">${count}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Animate bars
+            setTimeout(() => {
+                document.querySelectorAll('.bar-fill[data-target-width]').forEach(bar => {
+                    bar.style.width = bar.dataset.targetWidth;
+                });
+            }, 300);
+        }
+
+        function refreshAll() {
+            renderStats();
+            renderPositionFilter();
+            renderTable();
+            renderCharts();
+        }
+
+        /* ============================================================
+           DETAIL MODAL
+        ============================================================ */
+        let currentDetailId = null;
+
+        function openDetail(appId) {
+            const applicants = getApplicants();
+            const a = applicants.find(x => x.id === appId);
+            if (!a) return;
+            currentDetailId = appId;
+
+            const skillsHtml = (a.skills || []).map(s =>
+                `<span class="skill-tag skill-tag--${getSkillColor(s)}">${s}</span>`
+            ).join(' ');
+
+            const gpaClass = getGpaClass(a.gpa);
+            const statusClass = getStatusBadgeClass(a.status);
+
+            const timelineHtml = (a.timeline || []).map(t => `
+                <div class="timeline-item">
+                    <div class="timeline-dot">📌</div>
+                    <div class="timeline-content">
+                        <div class="timeline-text">${t.action}</div>
+                        <div class="timeline-time">${t.time}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('detailContent').innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-section">
+                        <div class="detail-label">ID</div>
+                        <div class="detail-value" style="color: var(--accent-purple-light); font-family: monospace;">${a.id}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">ชื่อ-สกุล</div>
+                        <div class="detail-value">${a.name}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">อีเมล</div>
+                        <div class="detail-value">${a.email}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">ตำแหน่ง</div>
+                        <div class="detail-value">${a.position}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">GPA</div>
+                        <div class="detail-value ${gpaClass}">${a.gpa.toFixed(2)}</div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-label">ประสบการณ์</div>
+                        <div class="detail-value">${a.experience} ปี</div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">ทักษะ</div>
+                    <div class="skill-tags" style="margin-top: 6px;">${skillsHtml}</div>
+                </div>
+                <div class="detail-section" style="margin-top: 16px;">
+                    <div class="detail-label">สถานะปัจจุบัน</div>
+                    <div style="margin-top: 6px;">
+                        <span class="status-badge ${statusClass}">
+                            <span class="status-dot"></span>
+                            ${a.status}
+                        </span>
+                    </div>
+                </div>
+                ${a.botNote ? `
+                <div class="detail-section" style="margin-top: 16px;">
+                    <div class="detail-label">หมายเหตุจากบอท</div>
+                    <div class="detail-value" style="font-style: italic; color: var(--text-muted);">🤖 ${a.botNote}</div>
+                </div>
+                ` : ''}
+                <div class="detail-section" style="margin-top: 20px;">
+                    <div class="detail-label">เปลี่ยนสถานะ</div>
+                    <select class="detail-status-select" id="detailStatusSelect">
+                        <option value="รอตรวจสอบ" ${a.status === 'รอตรวจสอบ' ? 'selected' : ''}>⏳ รอตรวจสอบ</option>
+                        <option value="ผ่านการคัดกรอง" ${a.status === 'ผ่านการคัดกรอง' ? 'selected' : ''}>✅ ผ่านการคัดกรอง</option>
+                        <option value="ไม่ผ่านการคัดกรอง" ${a.status === 'ไม่ผ่านการคัดกรอง' ? 'selected' : ''}>❌ ไม่ผ่านการคัดกรอง</option>
+                    </select>
+                    <button class="btn-save-status" id="btnSaveStatus" type="button" onclick="saveStatus()">💾 บันทึกสถานะ</button>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-title">📜 ประวัติการดำเนินการ</div>
+                    ${timelineHtml || '<div style="color: var(--text-muted); font-size: 13px;">ยังไม่มีประวัติ</div>'}
+                </div>
+            `;
+
+            document.getElementById('detailModalOverlay').classList.add('active');
+        }
+
+        function saveStatus() {
+            if (!currentDetailId) return;
+            const newStatus = document.getElementById('detailStatusSelect').value;
+            const applicants = getApplicants();
+            const idx = applicants.findIndex(a => a.id === currentDetailId);
+            if (idx === -1) return;
+
+            const oldStatus = applicants[idx].status;
+            if (oldStatus === newStatus) {
+                showToast('สถานะไม่มีการเปลี่ยนแปลง', 'info');
+                return;
+            }
+
+            applicants[idx].status = newStatus;
+            if (!applicants[idx].timeline) applicants[idx].timeline = [];
+            applicants[idx].timeline.push({
+                action: `เปลี่ยนสถานะด้วยตนเอง: ${oldStatus} → ${newStatus}`,
+                time: getNowString()
+            });
+
+            setApplicants(applicants);
+            refreshAll();
+            closeDetailModal();
+            showToast(`อัปเดตสถานะ ${applicants[idx].name} เป็น "${newStatus}" สำเร็จ`, 'success');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModalOverlay').classList.remove('active');
+            currentDetailId = null;
+        }
+
+        document.getElementById('detailModalClose').addEventListener('click', closeDetailModal);
+        document.getElementById('detailModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailModal();
+        });
+
+        /* ============================================================
+           DELETE CONFIRM
+        ============================================================ */
+        let deleteTargetId = null;
+        let deleteMode = 'single'; // 'single' or 'batch'
+
+        function openDeleteConfirm(appId) {
+            deleteTargetId = appId;
+            deleteMode = 'single';
+            const applicants = getApplicants();
+            const a = applicants.find(x => x.id === appId);
+            if (!a) return;
+            document.getElementById('deleteMessage').textContent =
+                `คุณต้องการลบผู้สมัคร "${a.name}" (${a.id}) หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้`;
+            document.getElementById('deleteModalOverlay').classList.add('active');
+        }
+
+        function openBatchDeleteConfirm() {
+            deleteMode = 'batch';
+            document.getElementById('deleteMessage').textContent =
+                `คุณต้องการลบผู้สมัครที่เลือก ${selectedIds.size} รายการหรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้`;
+            document.getElementById('deleteModalOverlay').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModalOverlay').classList.remove('active');
+            deleteTargetId = null;
+        }
+
+        document.getElementById('deleteModalClose').addEventListener('click', closeDeleteModal);
+        document.getElementById('btnCancelDelete').addEventListener('click', closeDeleteModal);
+        document.getElementById('deleteModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
+        });
+
+        document.getElementById('btnConfirmDelete').addEventListener('click', function() {
+            if (deleteMode === 'batch') {
+                let applicants = getApplicants();
+                const count = selectedIds.size;
+                applicants = applicants.filter(a => !selectedIds.has(a.id));
+                setApplicants(applicants);
+                selectedIds.clear();
+                closeDeleteModal();
+                refreshAll();
+                showToast(`ลบผู้สมัคร ${count} รายการสำเร็จ`, 'error');
+                return;
+            }
+
+            if (!deleteTargetId) return;
+            let applicants = getApplicants();
+            const target = applicants.find(a => a.id === deleteTargetId);
+            applicants = applicants.filter(a => a.id !== deleteTargetId);
+            setApplicants(applicants);
+            selectedIds.delete(deleteTargetId);
+            closeDeleteModal();
+            refreshAll();
+            showToast(`ลบผู้สมัคร "${target?.name || deleteTargetId}" สำเร็จ`, 'error');
+        });
+
+        /* ============================================================
+           BOT SCREENING
+        ============================================================ */
+        document.getElementById('btnRunBot').addEventListener('click', startBotScreening);
+
+        async function startBotScreening() {
+            const applicants = getApplicants();
+            const pending = applicants.filter(a => a.status === 'รอตรวจสอบ');
+
+            if (pending.length === 0) {
+                showToast('ไม่มีผู้สมัครที่รอตรวจสอบ', 'info');
+                return;
+            }
+
+            const overlay = document.getElementById('botModalOverlay');
+            document.getElementById('botProgressFill').style.width = '0%';
+            document.getElementById('botProgressText').textContent = '0%';
+            document.getElementById('botStatusText').textContent = '🤖 กำลังคัดกรองผู้สมัคร...';
+            document.getElementById('botCurrentItem').textContent = '';
+            document.getElementById('botResult').style.display = 'none';
+            document.getElementById('botRobot').style.display = 'inline-block';
+            document.getElementById('confettiContainer').innerHTML = '';
+            overlay.classList.add('active');
+
+            let passedCount = 0;
+            let failedCount = 0;
+
+            for (let i = 0; i < pending.length; i++) {
+                const p = pending[i];
+                const progress = ((i + 1) / pending.length * 100).toFixed(0);
+
+                document.getElementById('botCurrentItem').textContent = `กำลังตรวจสอบ: ${p.name} (${p.id})`;
+                document.getElementById('botProgressFill').style.width = progress + '%';
+                document.getElementById('botProgressText').textContent = `${progress}% (${i + 1}/${pending.length})`;
+
+                await new Promise(r => setTimeout(r, 1000));
+
+                const all = getApplicants();
+                const idx = all.findIndex(a => a.id === p.id);
+                if (idx !== -1) {
+                    if (all[idx].gpa >= 3.00) {
+                        all[idx].status = 'ผ่านการคัดกรอง';
+                        all[idx].botNote = 'ผ่านเกณฑ์ GPA ขั้นต่ำ';
+                        passedCount++;
+                    } else {
+                        all[idx].status = 'ไม่ผ่านการคัดกรอง';
+                        all[idx].botNote = 'GPA ต่ำกว่าเกณฑ์ขั้นต่ำ 3.00';
+                        failedCount++;
+                    }
+                    if (!all[idx].timeline) all[idx].timeline = [];
+                    all[idx].timeline.push({
+                        action: `บอทคัดกรอง: ${all[idx].status}`,
+                        time: getNowString()
+                    });
+                    setApplicants(all);
+                }
+            }
+
+            document.getElementById('botStatusText').textContent = '✅ คัดกรองเสร็จสิ้น!';
+            document.getElementById('botRobot').style.display = 'none';
+            document.getElementById('botCurrentItem').textContent = '';
+            document.getElementById('botPassedCount').textContent = passedCount;
+            document.getElementById('botFailedCount').textContent = failedCount;
+            document.getElementById('botResult').style.display = 'block';
+
+            createConfetti();
+            refreshAll();
+        }
+
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#7c3aed', '#22c55e', '#f59e0b', '#3b82f6', '#ef4444', '#ec4899', '#a78bfa'];
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 6 + 4) + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confetti.style.animation = `confettiFall ${1.5 + Math.random() * 2}s ${Math.random() * 0.5}s ease-out forwards`;
+                container.appendChild(confetti);
+            }
+
+            if (!document.getElementById('confettiStyle')) {
+                const style = document.createElement('style');
+                style.id = 'confettiStyle';
+                style.textContent = `
+                    @keyframes confettiFall {
+                        0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+                        100% { opacity: 0; transform: translateY(350px) rotate(${360 + Math.random() * 360}deg) scale(0.3); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        document.getElementById('btnCloseBot').addEventListener('click', function() {
+            document.getElementById('botModalOverlay').classList.remove('active');
+        });
+
+        /* ============================================================
+           SELECT ALL CHECKBOX
+        ============================================================ */
+        document.getElementById('selectAllCheckbox').addEventListener('change', function() {
+            const checked = this.checked;
+            document.querySelectorAll('.row-checkbox').forEach(cb => {
+                cb.checked = checked;
+                const id = cb.dataset.id;
+                if (checked) {
+                    selectedIds.add(id);
+                    cb.closest('tr').classList.add('selected');
+                } else {
+                    selectedIds.delete(id);
+                    cb.closest('tr').classList.remove('selected');
+                }
+            });
+            updateBatchButtons();
+        });
+
+        /* ============================================================
+           BATCH ACTIONS
+        ============================================================ */
+        document.getElementById('btnBatchStatus').addEventListener('click', function() {
+            if (selectedIds.size === 0) return;
+            const newStatus = document.getElementById('batchStatusSelect').value;
+            if (!newStatus) {
+                showToast('กรุณาเลือกสถานะก่อน', 'info');
+                return;
+            }
+
+            const applicants = getApplicants();
+            let changed = 0;
+            selectedIds.forEach(id => {
+                const idx = applicants.findIndex(a => a.id === id);
+                if (idx !== -1 && applicants[idx].status !== newStatus) {
+                    const old = applicants[idx].status;
+                    applicants[idx].status = newStatus;
+                    if (!applicants[idx].timeline) applicants[idx].timeline = [];
+                    applicants[idx].timeline.push({
+                        action: `เปลี่ยนสถานะแบบกลุ่ม: ${old} → ${newStatus}`,
+                        time: getNowString()
+                    });
+                    changed++;
+                }
+            });
+
+            setApplicants(applicants);
+            selectedIds.clear();
+            document.getElementById('selectAllCheckbox').checked = false;
+            refreshAll();
+            showToast(`เปลี่ยนสถานะ ${changed} รายการเป็น "${newStatus}" สำเร็จ`, 'success');
+        });
+
+        document.getElementById('btnBatchDelete').addEventListener('click', function() {
+            if (selectedIds.size === 0) return;
+            openBatchDeleteConfirm();
+        });
+
+        /* ============================================================
+           EXPORT FEATURES
+        ============================================================ */
+        document.getElementById('btnExportCSV').addEventListener('click', function() {
+            const applicants = getApplicants();
+            if (applicants.length === 0) {
+                showToast('ไม่มีข้อมูลสำหรับส่งออก', 'info');
+                return;
+            }
+
+            const headers = ['ID', 'ชื่อ-สกุล', 'อีเมล', 'ตำแหน่ง', 'GPA', 'ทักษะ', 'ประสบการณ์', 'สถานะ', 'หมายเหตุจากบอท'];
+            const rows = applicants.map(a => [
+                a.id,
+                a.name,
+                a.email,
+                a.position,
+                a.gpa.toFixed(2),
+                (a.skills || []).join('; '),
+                a.experience + ' ปี',
+                a.status,
+                a.botNote || ''
+            ]);
+
+            // BOM for Excel UTF-8 support
+            const bom = '\uFEFF';
+            const csvContent = bom + [headers.join(','), ...rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `hr-applicants-${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('ส่งออก CSV สำเร็จ', 'success');
+        });
+
+        document.getElementById('btnExportJSON').addEventListener('click', function() {
+            const applicants = getApplicants();
+            if (applicants.length === 0) {
+                showToast('ไม่มีข้อมูลสำหรับส่งออก', 'info');
+                return;
+            }
+
+            const jsonContent = JSON.stringify(applicants, null, 2);
+            const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `hr-applicants-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('ส่งออก JSON สำเร็จ', 'success');
+        });
+
+        document.getElementById('btnPrintReport').addEventListener('click', function() {
+            window.print();
+        });
+
+        /* ============================================================
+           AUTO-REFRESH
+        ============================================================ */
+        let autoRefreshInterval = null;
+        let countdownValue = 30;
+        let countdownInterval = null;
+
+        document.getElementById('autoRefreshToggle').addEventListener('change', function() {
+            const countdownEl = document.getElementById('countdownTimer');
+
+            if (this.checked) {
+                countdownValue = 30;
+                countdownEl.textContent = countdownValue;
+                countdownEl.classList.add('show');
+
+                countdownInterval = setInterval(() => {
+                    countdownValue--;
+                    countdownEl.textContent = countdownValue;
+
+                    if (countdownValue <= 0) {
+                        countdownValue = 30;
+                        refreshAll();
+                        showToast('🔄 ข้อมูลถูกรีเฟรชอัตโนมัติ', 'info');
+                    }
+                }, 1000);
+
+                showToast('เปิดรีเฟรชอัตโนมัติทุก 30 วินาที', 'success');
+            } else {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                countdownEl.classList.remove('show');
+                showToast('ปิดรีเฟรชอัตโนมัติ', 'info');
+            }
+        });
+
+        /* ============================================================
+           SETTINGS PANEL (GOOGLE SHEETS SYNC)
+        ============================================================ */
+        const SETTINGS_KEY = 'appSettings';
+
+        function getSettings() {
+            try {
+                return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveSettings(settings) {
+            // Keep both keys synchronized for compatibility between index and dashboard
+            settings.gsheetsEnabled = settings.syncEnabled;
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+        }
+
+        function loadSettingsUI() {
+            const settings = getSettings();
+            document.getElementById('settingsWebAppUrl').value = settings.webAppUrl || 'https://script.google.com/macros/s/AKfycbwsH0ycFLQCKsqGyfJXH4zEePTcNi9VgysmjCIjZX_isNOrC_jZXbDSszhUSjrsEZ3N/exec';
+            document.getElementById('settingsSyncToggle').checked = settings.syncEnabled !== undefined ? settings.syncEnabled : true;
+        }
+
+        document.getElementById('btnOpenSettings').addEventListener('click', function() {
+            loadSettingsUI();
+            document.getElementById('settingsOverlay').classList.add('active');
+        });
+
+        document.getElementById('btnCloseSettings').addEventListener('click', function() {
+            // Save current state
+            const settings = getSettings();
+            settings.webAppUrl = document.getElementById('settingsWebAppUrl').value.trim();
+            settings.syncEnabled = document.getElementById('settingsSyncToggle').checked;
+            saveSettings(settings);
+            document.getElementById('settingsOverlay').classList.remove('active');
+        });
+
+        document.getElementById('settingsOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                const settings = getSettings();
+                settings.webAppUrl = document.getElementById('settingsWebAppUrl').value.trim();
+                settings.syncEnabled = document.getElementById('settingsSyncToggle').checked;
+                saveSettings(settings);
+                this.classList.remove('active');
+            }
+        });
+
+        // Fetch from Google Sheets
+        document.getElementById('btnFetchSheets').addEventListener('click', async function() {
+            const url = document.getElementById('settingsWebAppUrl').value.trim();
+            if (!url) {
+                showToast('กรุณากรอก Web App URL ก่อน', 'error');
+                return;
+            }
+
+            const statusEl = document.getElementById('settingsSyncStatus');
+            statusEl.textContent = '⏳ กำลังดึงข้อมูล...';
+
+            try {
+                const response = await fetch(url, { method: 'GET', mode: 'cors' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+
+                if (Array.isArray(data) && data.length > 0) {
+                    // Map fullName to name if needed for dashboard compatibility
+                    const mapped = data.map(item => ({
+                        id: item.id || item.ID || '',
+                        name: item.name || item.fullName || item.Name || '',
+                        email: item.email || item.Email || '',
+                        position: item.position || item.Position || '',
+                        gpa: parseFloat(item.gpa || item.GPA || 0),
+                        skills: Array.isArray(item.skills) ? item.skills : (typeof item.skills === 'string' ? item.skills.split(',').map(s => s.trim()).filter(Boolean) : []),
+                        experience: parseInt(item.experience || item.Experience || 0),
+                        status: item.status || item.Status || 'รอตรวจสอบ',
+                        botNote: item.botNote || item.BotNote || '',
+                        timeline: item.timeline || []
+                    }));
+                    setApplicants(mapped);
+                    refreshAll();
+                    statusEl.textContent = `✅ ดึงข้อมูลสำเร็จ (${mapped.length} รายการ)`;
+                    showToast(`ดึงข้อมูลจาก Sheets สำเร็จ (${mapped.length} รายการ)`, 'success');
+                } else {
+                    statusEl.textContent = '⚠️ ไม่พบข้อมูลใน Sheets';
+                    showToast('ไม่พบข้อมูลใน Google Sheets', 'info');
+                }
+            } catch (err) {
+                statusEl.textContent = `❌ Error: ${err.message}`;
+                showToast(`ไม่สามารถดึงข้อมูลได้: ${err.message}`, 'error');
+            }
+        });
+
+        // Upload status back to Sheets
+        document.getElementById('btnUploadSheets').addEventListener('click', async function() {
+            const url = document.getElementById('settingsWebAppUrl').value.trim();
+            if (!url) {
+                showToast('กรุณากรอก Web App URL ก่อน', 'error');
+                return;
+            }
+
+            const statusEl = document.getElementById('settingsSyncStatus');
+            statusEl.textContent = '⏳ กำลังอัพโหลด...';
+
+            try {
+                const applicants = getApplicants();
+                const payload = applicants.map(a => ({
+                    id: a.id,
+                    name: a.name,
+                    email: a.email,
+                    position: a.position,
+                    gpa: a.gpa,
+                    skills: (a.skills || []).join(', '),
+                    experience: a.experience,
+                    status: a.status,
+                    botNote: a.botNote || ''
+                }));
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                statusEl.textContent = `✅ อัพโหลดสำเร็จ (${payload.length} รายการ)`;
+                showToast(`อัพโหลดสถานะกลับ Sheets สำเร็จ (${payload.length} รายการ)`, 'success');
+            } catch (err) {
+                statusEl.textContent = `❌ Error: ${err.message}`;
+                showToast(`ไม่สามารถอัพโหลดได้: ${err.message}`, 'error');
+            }
+        });
+
+        // Reset data
+        document.getElementById('btnResetData').addEventListener('click', function() {
+            if (confirm('คุณแน่ใจหรือไม่ว่าต้องการรีเซ็ตข้อมูลทั้งหมด? ข้อมูลทั้งหมดจะถูกแทนที่ด้วยข้อมูลตัวอย่าง')) {
+                setApplicants(SEED_DATA);
+                selectedIds.clear();
+                document.getElementById('selectAllCheckbox').checked = false;
+                refreshAll();
+                showToast('รีเซ็ตข้อมูลเรียบร้อย', 'success');
+            }
+        });
+
+        /* ============================================================
+           FILTER EVENTS
+        ============================================================ */
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(renderTable, 250);
+        });
+
+        document.getElementById('filterStatus').addEventListener('change', renderTable);
+        document.getElementById('filterPosition').addEventListener('change', renderTable);
+
+        /* ============================================================
+           KEYBOARD SHORTCUTS
+        ============================================================ */
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDetailModal();
+                closeDeleteModal();
+                document.getElementById('botModalOverlay').classList.remove('active');
+                document.getElementById('settingsOverlay').classList.remove('active');
+            }
+        });
+
+        /* ============================================================
+           INIT
+        ============================================================ */
+        function init() {
+            document.getElementById('currentDate').textContent = formatDate(new Date());
+            refreshAll();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

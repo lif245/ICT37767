@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="แบบฟอร์มสมัครงานออนไลน์ - Automated HR Recruitment & Screening System">
+    <meta name="keywords" content="HR, Recruitment, Screening, Automation, UiPath, RPA, สมัครงาน">
+    <meta name="author" content="HR Automation Team">
+    <title>แบบฟอร์มสมัครงาน | Application Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== Design Tokens: Warm Cream Paper Note Theme ===== */
+        :root {
+            --bg-deep: #f4efe6;
+            --bg-primary: #FAF7F2;
+            --bg-card: #FFFDF9;
+            --border-paper: #E5DDC8;
+            --border-paper-focus: #C8B998;
+            --text-primary: #2D2623;
+            --text-secondary: #5E554E;
+            --text-muted: #8C8278;
+            --accent-primary: #3D312E;
+            --accent-hover: #261F1D;
+            --accent-amber: #D97706;
+            --accent-amber-light: #FEF3C7;
+            --color-success: #2E7D32;
+            --color-success-bg: #E8F5E9;
+            --color-danger: #C62828;
+            --color-danger-bg: #FFEBEE;
+            --shadow-paper: 0 12px 40px rgba(70, 55, 40, 0.08), 0 2px 6px rgba(70, 55, 40, 0.04);
+            --shadow-input: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== Reset & Base ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ===== Warm Paper Grid Overlay ===== */
+        .paper-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(180, 160, 140, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(180, 160, 140, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        /* ===== Navigation ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(244, 239, 230, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-paper);
+        }
+
+        .navbar-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .nav-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-primary);
+            color: #FFFDF9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo-text {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link-dashboard {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-paper);
+            background: #FFFDF9;
+            transition: var(--transition);
+        }
+
+        .nav-link-dashboard:hover {
+            color: var(--text-primary);
+            border-color: var(--border-paper-focus);
+            background: #FAF7F2;
+        }
+
+        .nav-settings-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border-paper);
+            background: #FFFDF9;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-settings-btn:hover {
+            background: #FAF7F2;
+            border-color: var(--border-paper-focus);
+            color: var(--text-primary);
+        }
+
+        /* ===== Main Content Container ===== */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 100px 1.5rem 80px;
+        }
+
+        /* ===== Paper Note Card ===== */
+        .paper-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-paper);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-paper);
+            padding: 52px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Red/Brown Margin Line Accent for Paper Note Feel */
+        .paper-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 36px;
+            width: 2px;
+            background: rgba(198, 40, 40, 0.15);
+            pointer-events: none;
+        }
+
+        /* Top Binder / Document Header Bar */
+        .paper-card-header {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid var(--text-primary);
+            padding-bottom: 20px;
+        }
+
+        .document-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-amber);
+            background: var(--accent-amber-light);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .document-title {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+
+        .document-subtitle {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* ===== Form Section Headers ===== */
+        .form-section-title {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-paper);
+        }
+
+        .form-section-title h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-section-title p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ===== Form Layout ===== */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 22px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group-padded {
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-label .required {
+            color: var(--color-danger);
+            margin-left: 2px;
+        }
+
+        .form-label .optional-badge {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            background: #F4EFE6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+
+        /* ===== Input Fields ===== */
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 13px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-paper);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            transition: var(--transition);
+            outline: none;
+            box-shadow: var(--shadow-input);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .form-input:hover,
+        .form-select:hover,
+        .form-textarea:hover {
+            border-color: var(--border-paper-focus);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--accent-primary);
+            background: #FFFDF9;
+            box-shadow: 0 0 0 3px rgba(61, 49, 46, 0.08);
+        }
+
+        .form-input.valid {
+            border-color: var(--color-success);
+            background: #FFFDF9;
+        }
+
+        .form-input.invalid,
+        .form-select.invalid,
+        .form-textarea.invalid {
+            border-color: var(--color-danger);
+            background: #FFF9F9;
+        }
+
+        .form-select {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235E554E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+
+        .form-select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 10px;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        /* ===== Validation Indicators ===== */
+        .input-wrapper {
+            position: relative;
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .validation-icon.show {
+            opacity: 1;
+        }
+
+        .error-message {
+            font-size: 0.78rem;
+            color: var(--color-danger);
+            margin-top: 6px;
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        /* ===== Checkboxes Grid ===== */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            position: relative;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-paper);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .checkbox-label:hover {
+            border-color: var(--border-paper-focus);
+            color: var(--text-primary);
+            background: #FFFDF9;
+        }
+
+        .checkbox-item input:checked + .checkbox-label {
+            border-color: var(--accent-primary);
+            background: #F4EFE6;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .custom-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--border-paper-focus);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+            background: #FFFDF9;
+        }
+
+        .checkbox-item input:checked + .checkbox-label .custom-checkbox {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .custom-checkbox svg {
+            width: 11px;
+            height: 11px;
+            stroke: #FFFDF9;
+            stroke-width: 3;
+            fill: none;
+            opacity: 0;
+            transform: scale(0);
+            transition: var(--transition);
+        }
+
+        .checkbox-item input:checked + .checkbox-label .custom-checkbox svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ===== File Upload ===== */
+        .file-upload-area {
+            position: relative;
+            border: 1.5px dashed var(--border-paper-focus);
+            border-radius: var(--radius-sm);
+            padding: 24px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--bg-primary);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--accent-primary);
+            background: #FFFDF9;
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--color-success);
+            background: var(--color-success-bg);
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-icon {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .file-upload-text {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .file-upload-hint {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .file-name-display {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: var(--color-success-bg);
+            border: 1px solid rgba(46, 125, 50, 0.2);
+            border-radius: 6px;
+            font-size: 0.82rem;
+            color: var(--color-success);
+            font-weight: 600;
+        }
+
+        .file-name-display.show {
+            display: inline-flex;
+        }
+
+        /* ===== Submit Button ===== */
+        .submit-section {
+            margin-top: 32px;
+            padding-left: 20px;
+            text-align: center;
+        }
+
+        .btn-submit {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 44px;
+            background: var(--accent-primary);
+            color: #FFFDF9;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 14px rgba(61, 49, 46, 0.2);
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(61, 49, 46, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== Progress Bar ===== */
+        .form-progress {
+            margin-bottom: 28px;
+            padding-left: 20px;
+        }
+
+        .progress-bar-bg {
+            height: 5px;
+            background: var(--border-paper);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-primary);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ===== Divider ===== */
+        .form-divider {
+            height: 1px;
+            background: var(--border-paper);
+            margin: 28px 0 28px 20px;
+        }
+
+        /* ===== Success Modal ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(45, 38, 35, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-paper);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            max-width: 440px;
+            width: 100%;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 50px rgba(50, 40, 30, 0.2);
+        }
+
+        .modal-overlay.show .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--color-success-bg);
+            border: 1px solid rgba(46, 125, 50, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.6rem;
+            color: var(--color-success);
+        }
+
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .modal-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .modal-app-id {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-paper);
+            border-radius: 6px;
+            font-family: 'Inter', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin: 12px 0 20px;
+            letter-spacing: 1px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-modal {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-modal-primary {
+            background: var(--accent-primary);
+            color: #FFFDF9;
+        }
+
+        .btn-modal-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-modal-secondary {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-paper);
+            color: var(--text-secondary);
+        }
+
+        .btn-modal-secondary:hover {
+            background: var(--border-paper);
+            color: var(--text-primary);
+        }
+
+        /* ===== Toast Notification ===== */
+        .toast-container {
+            position: fixed;
+            top: 74px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            box-shadow: 0 6px 20px rgba(50, 40, 30, 0.12);
+            pointer-events: auto;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 360px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-paper);
+            color: var(--text-primary);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast.toast-success {
+            border-left: 4px solid var(--color-success);
+        }
+
+        .toast.toast-error {
+            border-left: 4px solid var(--color-danger);
+        }
+
+        .toast.toast-info {
+            border-left: 4px solid var(--accent-amber);
+        }
+
+        /* ===== Settings Panel ===== */
+        .settings-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(45, 38, 35, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 500;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .settings-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            max-width: 90vw;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-paper);
+            z-index: 501;
+            padding: 0;
+            transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 30px rgba(50, 40, 30, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .settings-panel.show {
+            right: 0;
+        }
+
+        .settings-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-paper);
+            flex-shrink: 0;
+        }
+
+        .settings-panel-header h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .settings-close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border-paper);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-close-btn:hover {
+            background: var(--color-danger-bg);
+            color: var(--color-danger);
+            border-color: rgba(198, 40, 40, 0.2);
+        }
+
+        .settings-body {
+            padding: 24px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin-bottom: 28px;
+        }
+
+        .settings-section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-paper);
+        }
+
+        .settings-field {
+            margin-bottom: 16px;
+        }
+
+        .settings-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .settings-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-paper);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'Inter', monospace;
+            font-size: 0.82rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .settings-input:focus {
+            border-color: var(--accent-primary);
+            background: #FFFDF9;
+        }
+
+        .settings-input-hint {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .settings-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-paper);
+            border-radius: var(--radius-sm);
+            margin-bottom: 14px;
+        }
+
+        .settings-toggle-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .settings-toggle-desc {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: var(--border-paper-focus);
+            border-radius: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #FFFDF9;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--accent-primary);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(20px);
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .connection-status.disconnected {
+            background: var(--color-danger-bg);
+            border: 1px solid rgba(198, 40, 40, 0.2);
+            color: var(--color-danger);
+        }
+
+        .connection-status.connected {
+            background: var(--color-success-bg);
+            border: 1px solid rgba(46, 125, 50, 0.2);
+            color: var(--color-success);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .connection-status.disconnected .status-dot { background: var(--color-danger); }
+        .connection-status.connected .status-dot { background: var(--color-success); }
+
+        .settings-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            width: 100%;
+        }
+
+        .settings-btn-test {
+            background: var(--accent-primary);
+            color: #FFFDF9;
+        }
+
+        .settings-btn-test:hover {
+            background: var(--accent-hover);
+        }
+
+        .export-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .settings-btn-export {
+            flex: 1;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-paper);
+            color: var(--text-secondary);
+        }
+
+        .settings-btn-export:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            background: #FFFDF9;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .paper-card {
+                padding: 32px 20px;
+            }
+
+            .paper-card::before {
+                left: 16px;
+            }
+
+            .paper-card-header,
+            .form-section-title,
+            .form-row,
+            .form-group-padded,
+            .form-progress,
+            .form-divider,
+            .submit-section {
+                padding-left: 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 80px 1rem 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Paper Grid Background -->
+    <div class="paper-grid"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="เมนูหลัก">
+        <div class="navbar-inner">
+            <a href="#" class="nav-logo" id="navLogo">
+                <div class="nav-logo-icon">HR</div>
+                <span class="nav-logo-text">แบบฟอร์มสมัครงาน</span>
+            </a>
+            <!-- Navbar links removed as requested -->
+        </div>
+    </nav>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Settings Overlay -->
+    <div class="settings-overlay" id="settingsOverlay"></div>
+
+    <!-- Settings Panel -->
+    <aside class="settings-panel" id="settingsPanel" role="dialog" aria-label="ตั้งค่าระบบ">
+        <div class="settings-panel-header">
+            <h3>ตั้งค่าระบบและการเชื่อมต่อ</h3>
+            <button class="settings-close-btn" id="btnCloseSettings" aria-label="ปิด">✕</button>
+        </div>
+        <div class="settings-body">
+            <!-- Google Sheets Section -->
+            <div class="settings-section">
+                <div class="settings-section-title">Google Sheets Integration</div>
+
+                <div class="connection-status disconnected" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span id="connectionStatusText">ไม่ได้เชื่อมต่อ</span>
+                </div>
+
+                <div class="settings-field">
+                    <label class="settings-label" for="settingsWebAppUrl">Google Apps Script Web App URL</label>
+                    <input type="url" class="settings-input" id="settingsWebAppUrl"
+                           placeholder="https://script.google.com/macros/s/.../exec">
+                    <div class="settings-input-hint">
+                        ระบบจะส่งข้อมูลผู้สมัครไปบันทึกใน Google Sheets โดยอัตโนมัติ
+                    </div>
+                </div>
+
+                <div class="settings-toggle-row">
+                    <div>
+                        <div class="settings-toggle-label">บันทึกลง Google Sheets</div>
+                        <div class="settings-toggle-desc">เปิดใช้งานการส่งข้อมูลเมื่อมีการสมัคร</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="settingsGSheetsToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <button class="settings-btn settings-btn-test" id="btnTestConnection">
+                    ทดสอบการเชื่อมต่อ
+                </button>
+            </div>
+
+            <!-- Export Data Section -->
+            <div class="settings-section">
+                <div class="settings-section-title">ส่งออกข้อมูล</div>
+                <div class="export-btns">
+                    <button class="settings-btn settings-btn-export" id="btnExportJSON">
+                        ส่งออก JSON
+                    </button>
+                    <button class="settings-btn settings-btn-export" id="btnExportCSV">
+                        ส่งออก CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content: Paper Application Form -->
+    <main class="main-content" role="main">
+        <div class="paper-card">
+            <!-- Document Header -->
+            <div class="paper-card-header">
+                <span class="document-tag">JOB APPLICATION FORM</span>
+                <h1 class="document-title">ใบสมัครงานออนไลน์</h1>
+                <p class="document-subtitle">กรุณากรอกข้อมูลเพื่อยื่นใบสมัครผ่านระบบคัดกรองเบื้องต้น</p>
+            </div>
+
+            <!-- Form Progress -->
+            <div class="form-progress" id="formProgress">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progressLabel">เริ่มกรอกข้อมูล</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+            </div>
+
+            <form id="applicationForm" novalidate>
+                <!-- Section: Personal Info -->
+                <div class="form-section-title">
+                    <div>
+                        <h2>1. ข้อมูลส่วนตัว</h2>
+                        <p>กรอกชื่อและข้อมูลการติดต่อของคุณ</p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">
+                            ชื่อ-นามสกุล <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" class="form-input" id="fullName" name="fullName"
+                                   placeholder="เช่น สมชาย ใจดี" required autocomplete="name"
+                                   aria-required="true">
+                            <span class="validation-icon" id="fullNameIcon"></span>
+                        </div>
+                        <div class="error-message" id="fullNameError">กรุณากรอกชื่อ-นามสกุล</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            อีเมล <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="email" class="form-input" id="email" name="email"
+                                   placeholder="example@email.com" required autocomplete="email"
+                                   aria-required="true">
+                            <span class="validation-icon" id="emailIcon"></span>
+                        </div>
+                        <div class="error-message" id="emailError">กรุณากรอกอีเมลที่ถูกต้อง</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="phone">
+                            เบอร์โทรศัพท์ <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="tel" class="form-input" id="phone" name="phone"
+                                   placeholder="08X-XXX-XXXX" required autocomplete="tel"
+                                   aria-required="true">
+                            <span class="validation-icon" id="phoneIcon"></span>
+                        </div>
+                        <div class="error-message" id="phoneError">กรุณากรอกเบอร์โทรศัพท์</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="position">
+                            ตำแหน่งที่สมัคร <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <select class="form-select" id="position" name="position" required aria-required="true">
+                                <option value="" disabled selected>-- เลือกตำแหน่ง --</option>
+                                <option value="นักพัฒนาซอฟต์แวร์ (Software Developer)">นักพัฒนาซอฟต์แวร์ (Software Developer)</option>
+                                <option value="นักวิเคราะห์ข้อมูล (Data Analyst)">นักวิเคราะห์ข้อมูล (Data Analyst)</option>
+                                <option value="นักออกแบบ UX/UI (UX/UI Designer)">นักออกแบบ UX/UI (UX/UI Designer)</option>
+                                <option value="ผู้จัดการโครงการ (Project Manager)">ผู้จัดการโครงการ (Project Manager)</option>
+                                <option value="วิศวกรระบบ (System Engineer)">วิศวกรระบบ (System Engineer)</option>
+                            </select>
+                            <span class="validation-icon" id="positionIcon"></span>
+                        </div>
+                        <div class="error-message" id="positionError">กรุณาเลือกตำแหน่ง</div>
+                    </div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Section: Qualifications -->
+                <div class="form-section-title">
+                    <div>
+                        <h2>2. คุณสมบัติและประสบการณ์</h2>
+                        <p>ระบุผลการเรียน ทักษะความสามารถ และประสบการณ์</p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="gpa">
+                            เกรดเฉลี่ย (GPA) <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" class="form-input" id="gpa" name="gpa"
+                                   placeholder="เช่น 3.50" min="0" max="4" step="0.01"
+                                   required aria-required="true">
+                            <span class="validation-icon" id="gpaIcon"></span>
+                        </div>
+                        <div class="error-message" id="gpaError">กรุณากรอก GPA (0.00 - 4.00)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="experience">
+                            ประสบการณ์ทำงาน (ปี) <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" class="form-input" id="experience" name="experience"
+                                   placeholder="เช่น 2" min="0" step="1"
+                                   required aria-required="true">
+                            <span class="validation-icon" id="experienceIcon"></span>
+                        </div>
+                        <div class="error-message" id="experienceError">กรุณากรอกจำนวนปีประสบการณ์</div>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-padded">
+                    <label class="form-label">
+                        ทักษะความสามารถ <span class="required">*</span>
+                    </label>
+                    <div class="checkbox-grid" id="skillsGroup">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skillPython" name="skills" value="Python">
+                            <label class="checkbox-label" for="skillPython">
+                                <span class="custom-checkbox">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </span>
+                                Python
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skillJS" name="skills" value="JavaScript">
+                            <label class="checkbox-label" for="skillJS">
+                                <span class="custom-checkbox">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </span>
+                                JavaScript
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skillSQL" name="skills" value="SQL">
+                            <label class="checkbox-label" for="skillSQL">
+                                <span class="custom-checkbox">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </span>
+                                SQL
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skillUiPath" name="skills" value="UiPath">
+                            <label class="checkbox-label" for="skillUiPath">
+                                <span class="custom-checkbox">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </span>
+                                UiPath
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skillPowerBI" name="skills" value="Power BI">
+                            <label class="checkbox-label" for="skillPowerBI">
+                                <span class="custom-checkbox">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </span>
+                                Power BI
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skillFigma" name="skills" value="Figma">
+                            <label class="checkbox-label" for="skillFigma">
+                                <span class="custom-checkbox">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </span>
+                                Figma
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skillDocker" name="skills" value="Docker">
+                            <label class="checkbox-label" for="skillDocker">
+                                <span class="custom-checkbox">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </span>
+                                Docker
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="skillGit" name="skills" value="Git">
+                            <label class="checkbox-label" for="skillGit">
+                                <span class="custom-checkbox">
+                                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </span>
+                                Git
+                            </label>
+                        </div>
+                    </div>
+                    <div class="error-message" id="skillsError">กรุณาเลือกทักษะอย่างน้อย 1 รายการ</div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- Section: Additional Files & Info -->
+                <div class="form-section-title">
+                    <div>
+                        <h2>3. เอกสารและข้อมูลเพิ่มเติม</h2>
+                        <p>แนบไฟล์เรซูเม่และข้อความแนะนำตัว</p>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-padded">
+                    <label class="form-label" for="resume">
+                        เรซูเม่ (Resume/CV) <span class="optional-badge">Optional</span>
+                    </label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
+                        <div class="file-upload-icon">📄</div>
+                        <div class="file-upload-text">คลิกเพื่อเลือกไฟล์ หรือลากไฟล์มาวางที่นี่</div>
+                        <div class="file-upload-hint">รองรับไฟล์ .pdf, .doc, .docx (ขนาดไม่เกิน 10MB)</div>
+                    </div>
+                    <div class="file-name-display" id="fileNameDisplay">
+                        <span>ไฟล์ที่เลือก:</span>
+                        <strong id="fileName"></strong>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-padded">
+                    <label class="form-label" for="introduction">
+                        แนะนำตัว / ข้อความเพิ่มเติม <span class="optional-badge">Optional</span>
+                    </label>
+                    <textarea class="form-textarea" id="introduction" name="introduction"
+                              placeholder="บอกเล่าเกี่ยวกับตัวคุณ จุดเด่น หรือแรงจูงใจในการสมัครงานตำแหน่งนี้..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="submit-section">
+                    <button type="submit" class="btn-submit" id="btnSubmit">
+                        <span>ส่งใบสมัครงาน</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-icon">✓</div>
+            <h2 class="modal-title">ส่งใบสมัครเรียบร้อยแล้ว</h2>
+            <p class="modal-message">ขอบคุณสำหรับการยื่นใบสมัคร ระบบได้บันทึกข้อมูลของคุณเรียบร้อยแล้ว</p>
+            <div class="modal-app-id" id="modalAppId">APP-001</div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-modal btn-modal-primary" id="btnModalClose" style="width: 100%;">ตกลง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Pre-loaded Sample Data
+        const SAMPLE_APPLICANTS = [
+            {
+                id: 'APP-001',
+                fullName: 'สมชาย ใจดี',
+                email: 'somchai@example.com',
+                phone: '081-234-5678',
+                position: 'นักพัฒนาซอฟต์แวร์ (Software Developer)',
+                gpa: 3.85,
+                skills: ['Python', 'JavaScript', 'Git'],
+                experience: 3,
+                resume: 'somchai_resume.pdf',
+                introduction: 'สนใจร่วมงานในตำแหน่ง Software Developer มีประสบการณ์พัฒนาเว็บแอปพลิเคชัน',
+                timestamp: '2026-07-15T09:30:00.000Z',
+                status: 'ผ่านการคัดกรอง',
+                botNote: 'ผ่านเกณฑ์ GPA ขั้นต่ำ'
+            },
+            {
+                id: 'APP-002',
+                fullName: 'สมหญิง รักเรียน',
+                email: 'somying@example.com',
+                phone: '082-345-6789',
+                position: 'นักวิเคราะห์ข้อมูล (Data Analyst)',
+                gpa: 3.92,
+                skills: ['Python', 'SQL', 'Power BI'],
+                experience: 2,
+                resume: 'somying_cv.pdf',
+                introduction: 'มุ่งมั่นในการทำวิเคราะห์ข้อมูลทางธุรกิจ ชอบการสกัด insight จากข้อมูลขนาดใหญ่',
+                timestamp: '2026-07-15T10:15:00.000Z',
+                status: 'ผ่านการคัดกรอง',
+                botNote: 'ผ่านเกณฑ์ GPA ขั้นต่ำ'
+            },
+            {
+                id: 'APP-003',
+                fullName: 'วิชัย สร้างสรรค์',
+                email: 'wichai@example.com',
+                phone: '083-456-7890',
+                position: 'นักออกแบบ UX/UI (UX/UI Designer)',
+                gpa: 2.45,
+                skills: ['Figma', 'JavaScript'],
+                experience: 1,
+                resume: 'wichai_portfolio.pdf',
+                introduction: 'รักการออกแบบ Design System และสร้าง User Experience ที่ลื่นไหล',
+                timestamp: '2026-07-15T11:00:00.000Z',
+                status: 'ไม่ผ่านการคัดกรอง',
+                botNote: 'GPA ต่ำกว่าเกณฑ์ขั้นต่ำ 3.00'
+            },
+            {
+                id: 'APP-004',
+                fullName: 'พิมพ์ใจ เก่งมาก',
+                email: 'pimjai@example.com',
+                phone: '084-567-8901',
+                position: 'ผู้จัดการโครงการ (Project Manager)',
+                gpa: 3.50,
+                skills: ['Python', 'Docker', 'Git'],
+                experience: 5,
+                resume: 'pimjai_resume.pdf',
+                introduction: 'มีประสบการณ์บริหารทีมซอฟต์แวร์ด้วย Agile/Scrum มามากกว่า 5 ปี',
+                timestamp: '2026-07-15T13:45:00.000Z',
+                status: 'รอตรวจสอบ',
+                botNote: ''
+            },
+            {
+                id: 'APP-005',
+                fullName: 'ธนาคม อัจฉริยะ',
+                email: 'thanakorn@example.com',
+                phone: '085-678-9012',
+                position: 'วิศวกรระบบ (System Engineer)',
+                gpa: 3.10,
+                skills: ['Docker', 'Git', 'SQL'],
+                experience: 0,
+                resume: '',
+                introduction: 'บัณฑิตจบใหม่ มีความหลงใหลในระบบ Infrastructure และ Cloud Computing',
+                timestamp: '2026-07-15T14:30:00.000Z',
+                status: 'รอตรวจสอบ',
+                botNote: ''
+            }
+        ];
+
+        // Initialize localStorage if empty
+        (function seedInitialData() {
+            const existing = localStorage.getItem('applicants');
+            if (!existing || JSON.parse(existing).length === 0) {
+                localStorage.setItem('applicants', JSON.stringify(SAMPLE_APPLICANTS));
+            }
+        })();
+
+        // Element Selectors
+        const form = document.getElementById('applicationForm');
+        const fields = {
+            fullName: { el: document.getElementById('fullName'), error: document.getElementById('fullNameError'), icon: document.getElementById('fullNameIcon') },
+            email: { el: document.getElementById('email'), error: document.getElementById('emailError'), icon: document.getElementById('emailIcon') },
+            phone: { el: document.getElementById('phone'), error: document.getElementById('phoneError'), icon: document.getElementById('phoneIcon') },
+            position: { el: document.getElementById('position'), error: document.getElementById('positionError'), icon: document.getElementById('positionIcon') },
+            gpa: { el: document.getElementById('gpa'), error: document.getElementById('gpaError'), icon: document.getElementById('gpaIcon') },
+            experience: { el: document.getElementById('experience'), error: document.getElementById('experienceError'), icon: document.getElementById('experienceIcon') }
+        };
+
+        // Validators
+        const validators = {
+            fullName: (val) => val.trim().length >= 2,
+            email: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim()),
+            phone: (val) => /^0[0-9]{8,9}$/.test(val.trim().replace(/[- ]/g, '')),
+            position: (val) => val !== null && val !== '',
+            gpa: (val) => {
+                const num = parseFloat(val);
+                return !isNaN(num) && num >= 0 && num <= 4.0;
+            },
+            experience: (val) => {
+                const num = parseInt(val);
+                return !isNaN(num) && num >= 0;
+            }
+        };
+
+        function validateField(fieldName, showUI = true) {
+            const field = fields[fieldName];
+            const value = field.el.value;
+            const isValid = validators[fieldName](value);
+
+            if (showUI) {
+                if (isValid) {
+                    field.el.classList.remove('invalid');
+                    field.el.classList.add('valid');
+                    field.error.classList.remove('show');
+                    field.icon.textContent = '✓';
+                    field.icon.style.color = 'var(--color-success)';
+                    field.icon.classList.add('show');
+                } else {
+                    field.el.classList.remove('valid');
+                    field.el.classList.add('invalid');
+                    field.error.classList.add('show');
+                    field.icon.textContent = '✕';
+                    field.icon.style.color = 'var(--color-danger)';
+                    field.icon.classList.add('show');
+                }
+            }
+
+            updateProgress();
+            return isValid;
+        }
+
+        // Add Input Event Listeners
+        Object.keys(fields).forEach(key => {
+            const field = fields[key];
+            field.el.addEventListener('input', () => validateField(key, true));
+            field.el.addEventListener('blur', () => validateField(key, true));
+            if (field.el.tagName === 'SELECT') {
+                field.el.addEventListener('change', () => validateField(key, true));
+            }
+        });
+
+        // Skills Checkbox Selection Helper
+        function getSelectedSkills() {
+            const checkboxes = document.querySelectorAll('input[name="skills"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        document.querySelectorAll('input[name="skills"]').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const skills = getSelectedSkills();
+                const skillsError = document.getElementById('skillsError');
+                if (skills.length > 0) {
+                    skillsError.classList.remove('show');
+                }
+                updateProgress();
+            });
+        });
+
+        // Progress Bar Update
+        function updateProgress() {
+            const totalFields = 7;
+            let filled = 0;
+
+            Object.keys(fields).forEach(key => {
+                if (fields[key].el.value.trim() !== '' && validators[key](fields[key].el.value)) {
+                    filled++;
+                }
+            });
+
+            if (getSelectedSkills().length > 0) filled++;
+
+            const pct = Math.round((filled / totalFields) * 100);
+            document.getElementById('progressBarFill').style.width = pct + '%';
+            document.getElementById('progressPercent').textContent = pct + '%';
+
+            const labels = [
+                [0, 'เริ่มกรอกข้อมูล'],
+                [30, 'กำลังดำเนินการ...'],
+                [60, 'เกือบเสร็จแล้ว'],
+                [90, 'พร้อมส่งใบสมัคร'],
+                [100, 'ข้อมูลครบถ้วน'],
+            ];
+
+            for (let i = labels.length - 1; i >= 0; i--) {
+                if (pct >= labels[i][0]) {
+                    document.getElementById('progressLabel').textContent = labels[i][1];
+                    break;
+                }
+            }
+        }
+
+        // File Upload Handling
+        const fileInput = document.getElementById('resume');
+        const fileArea = document.getElementById('fileUploadArea');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const fileNameSpan = document.getElementById('fileName');
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileNameSpan.textContent = fileInput.files[0].name;
+                fileNameDisplay.classList.add('show');
+            } else {
+                fileNameDisplay.classList.remove('show');
+            }
+        });
+
+        fileArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileArea.classList.add('dragover');
+        });
+
+        fileArea.addEventListener('dragleave', () => {
+            fileArea.classList.remove('dragover');
+        });
+
+        fileArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileArea.classList.remove('dragover');
+        });
+
+        // Toast Notification System
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            const icons = { success: '✓', error: '✕', info: 'i' };
+            toast.innerHTML = `<span style="font-weight:bold; margin-right:4px;">${icons[type] || 'i'}</span><span>${message}</span>`;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                });
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, duration);
+        }
+
+        // Settings Panel Logic
+        const settingsPanel = document.getElementById('settingsPanel');
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const btnOpenSettings = document.getElementById('btnOpenSettings');
+        const btnCloseSettings = document.getElementById('btnCloseSettings');
+        const settingsWebAppUrl = document.getElementById('settingsWebAppUrl');
+        const settingsGSheetsToggle = document.getElementById('settingsGSheetsToggle');
+        const btnTestConnection = document.getElementById('btnTestConnection');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const connectionStatusText = document.getElementById('connectionStatusText');
+
+        function getAppSettings() {
+            const saved = JSON.parse(localStorage.getItem('appSettings') || '{}');
+            return {
+                webAppUrl: saved.webAppUrl || 'https://script.google.com/macros/s/AKfycbwsH0ycFLQCKsqGyfJXH4zEePTcNi9VgysmjCIjZX_isNOrC_jZXbDSszhUSjrsEZ3N/exec',
+                gsheetsEnabled: saved.gsheetsEnabled !== undefined ? saved.gsheetsEnabled : true,
+                connectionVerified: saved.connectionVerified !== undefined ? saved.connectionVerified : true
+            };
+        }
+
+        function loadSettings() {
+            const settings = getAppSettings();
+            settingsWebAppUrl.value = settings.webAppUrl;
+            settingsGSheetsToggle.checked = settings.gsheetsEnabled;
+            updateConnectionStatusUI(settings.connectionVerified);
+            if (!localStorage.getItem('appSettings')) {
+                saveSettings();
+            }
+        }
+
+        function saveSettings() {
+            const settings = {
+                webAppUrl: settingsWebAppUrl.value.trim() || 'https://script.google.com/macros/s/AKfycbwsH0ycFLQCKsqGyfJXH4zEePTcNi9VgysmjCIjZX_isNOrC_jZXbDSszhUSjrsEZ3N/exec',
+                gsheetsEnabled: settingsGSheetsToggle.checked,
+                connectionVerified: connectionStatus.classList.contains('connected')
+            };
+            localStorage.setItem('appSettings', JSON.stringify(settings));
+        }
+
+        function updateConnectionStatusUI(isConnected) {
+            connectionStatus.classList.remove('connected', 'disconnected');
+            if (isConnected) {
+                connectionStatus.classList.add('connected');
+                connectionStatusText.textContent = 'เชื่อมต่อแล้ว';
+            } else {
+                connectionStatus.classList.add('disconnected');
+                connectionStatusText.textContent = 'ไม่ได้เชื่อมต่อ';
+            }
+        }
+
+        function openSettings() {
+            settingsPanel.classList.add('show');
+            settingsOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSettings() {
+            settingsPanel.classList.remove('show');
+            settingsOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+            saveSettings();
+        }
+
+        if (btnOpenSettings) btnOpenSettings.addEventListener('click', openSettings);
+        if (btnCloseSettings) btnCloseSettings.addEventListener('click', closeSettings);
+        if (settingsOverlay) settingsOverlay.addEventListener('click', closeSettings);
+
+        settingsWebAppUrl.addEventListener('input', saveSettings);
+        settingsGSheetsToggle.addEventListener('change', () => {
+            if (settingsGSheetsToggle.checked && !settingsWebAppUrl.value.trim()) {
+                showToast('กรุณาใส่ Web App URL ก่อนเปิดใช้งาน', 'error');
+                settingsGSheetsToggle.checked = false;
+                return;
+            }
+            saveSettings();
+            if (settingsGSheetsToggle.checked) {
+                showToast('เปิดใช้งานบันทึกลง Google Sheets', 'success');
+            } else {
+                showToast('ปิดการบันทึกลง Google Sheets', 'info');
+            }
+        });
+
+        btnTestConnection.addEventListener('click', async () => {
+            const url = settingsWebAppUrl.value.trim();
+            if (!url) {
+                showToast('กรุณาใส่ Web App URL ก่อน', 'error');
+                return;
+            }
+
+            btnTestConnection.disabled = true;
+            btnTestConnection.innerHTML = 'กำลังทดสอบ...';
+            connectionStatusText.textContent = 'กำลังทดสอบ...';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ test: true, timestamp: new Date().toISOString() })
+                });
+
+                updateConnectionStatusUI(true);
+                showToast('ทดสอบการเชื่อมต่อสำเร็จ', 'success');
+                saveSettings();
+            } catch (error) {
+                updateConnectionStatusUI(false);
+                showToast('เชื่อมต่อไม่สำเร็จ: ' + error.message, 'error');
+                saveSettings();
+            } finally {
+                btnTestConnection.disabled = false;
+                btnTestConnection.innerHTML = 'ทดสอบการเชื่อมต่อ';
+            }
+        });
+
+        loadSettings();
+
+        // Export Helpers
+        function downloadFile(content, fileName, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('btnExportJSON').addEventListener('click', () => {
+            const applicants = JSON.parse(localStorage.getItem('applicants') || '[]');
+            if (applicants.length === 0) {
+                showToast('ไม่มีข้อมูลผู้สมัครสำหรับส่งออก', 'error');
+                return;
+            }
+            const json = JSON.stringify(applicants, null, 2);
+            downloadFile(json, 'applicants.json', 'application/json');
+            showToast(`ส่งออก JSON สำเร็จ (${applicants.length} รายการ)`, 'success');
+        });
+
+        document.getElementById('btnExportCSV').addEventListener('click', () => {
+            const applicants = JSON.parse(localStorage.getItem('applicants') || '[]');
+            if (applicants.length === 0) {
+                showToast('ไม่มีข้อมูลผู้สมัครสำหรับส่งออก', 'error');
+                return;
+            }
+
+            const headers = ['id', 'fullName', 'email', 'phone', 'position', 'gpa', 'skills', 'experience', 'resume', 'introduction', 'timestamp', 'status', 'botNote'];
+            const headersTH = ['รหัส', 'ชื่อ-นามสกุล', 'อีเมล', 'เบอร์โทร', 'ตำแหน่ง', 'GPA', 'ทักษะ', 'ประสบการณ์(ปี)', 'เรซูเม่', 'แนะนำตัว', 'วันที่สมัคร', 'สถานะ', 'หมายเหตุ Bot'];
+
+            let csv = '\uFEFF' + headersTH.join(',') + '\n';
+            applicants.forEach(a => {
+                const row = headers.map(h => {
+                    let val = a[h];
+                    if (Array.isArray(val)) val = val.join('; ');
+                    if (val === undefined || val === null) val = '';
+                    val = String(val).replace(/"/g, '""');
+                    return `"${val}"`;
+                });
+                csv += row.join(',') + '\n';
+            });
+
+            downloadFile(csv, 'applicants.csv', 'text/csv;charset=utf-8');
+            showToast(`ส่งออก CSV สำเร็จ (${applicants.length} รายการ)`, 'success');
+        });
+
+        // Google Sheets POST Helper
+        async function sendToGoogleSheets(data) {
+            const settings = getAppSettings();
+            if (!settings.gsheetsEnabled || !settings.webAppUrl) return;
+
+            const payload = {
+                id: data.id,
+                appId: data.id,
+                name: data.fullName,
+                fullName: data.fullName,
+                fullname: data.fullName,
+                full_name: data.fullName,
+                applicant_name: data.fullName,
+                applicantName: data.fullName,
+                'ชื่อ-นามสกุล': data.fullName,
+                'ชื่อ': data.fullName,
+                email: data.email,
+                phone: data.phone,
+                position: data.position,
+                gpa: data.gpa,
+                skills: Array.isArray(data.skills) ? data.skills.join(', ') : data.skills,
+                experience: data.experience,
+                resume_name: data.resume,
+                intro: data.introduction,
+                timestamp: data.timestamp
+            };
+
+            try {
+                const response = await fetch(settings.webAppUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                showToast('บันทึกลง Google Sheets สำเร็จ', 'success');
+            } catch (error) {
+                console.error('Google Sheets Error:', error);
+                showToast('บันทึกลง Sheets ไม่สำเร็จ (ใช้ localStorage แทน)', 'error');
+            }
+        }
+
+        // Form Submission Handler
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            let allValid = true;
+            Object.keys(fields).forEach(key => {
+                const result = validateField(key, true);
+                if (!result) allValid = false;
+            });
+
+            const skills = getSelectedSkills();
+            if (skills.length === 0) {
+                document.getElementById('skillsError').classList.add('show');
+                allValid = false;
+            }
+
+            if (!allValid) {
+                const firstError = document.querySelector('.form-input.invalid, .form-select.invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+                return;
+            }
+
+            const applicants = JSON.parse(localStorage.getItem('applicants') || '[]');
+            const nextNum = applicants.length + 1;
+            const appId = 'APP-' + String(nextNum).padStart(3, '0');
+
+            const newApplicant = {
+                id: appId,
+                fullName: fields.fullName.el.value.trim(),
+                email: fields.email.el.value.trim(),
+                phone: fields.phone.el.value.trim(),
+                position: fields.position.el.value,
+                gpa: parseFloat(fields.gpa.el.value),
+                skills: skills,
+                experience: parseInt(fields.experience.el.value),
+                resume: fileInput.files.length > 0 ? fileInput.files[0].name : '',
+                introduction: document.getElementById('introduction').value.trim(),
+                timestamp: new Date().toISOString(),
+                status: 'รอตรวจสอบ',
+                botNote: ''
+            };
+
+            applicants.push(newApplicant);
+            localStorage.setItem('applicants', JSON.stringify(applicants));
+
+            sendToGoogleSheets(newApplicant);
+            showSuccessModal(appId);
+
+            form.reset();
+            fileNameDisplay.classList.remove('show');
+            Object.keys(fields).forEach(key => {
+                fields[key].el.classList.remove('valid', 'invalid');
+                fields[key].icon.classList.remove('show');
+                fields[key].error.classList.remove('show');
+            });
+            document.getElementById('skillsError').classList.remove('show');
+            updateProgress();
+        });
+
+        // Modal Functions
+        function showSuccessModal(appId) {
+            const modal = document.getElementById('successModal');
+            document.getElementById('modalAppId').textContent = appId;
+            modal.classList.add('show');
+        }
+
+        document.getElementById('btnModalClose').addEventListener('click', () => {
+            document.getElementById('successModal').classList.remove('show');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('successModal').classList.remove('show');
+                closeSettings();
+            }
+        });
+    </script>
+</body>
+</html>

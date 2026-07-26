@@ -1,0 +1,405 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:uga="clr-namespace:UiPath.GSuite.Activities;assembly=UiPath.GSuite.Activities" xmlns:ugade="clr-namespace:UiPath.GSuite.Activities.Drive.Enums;assembly=UiPath.GSuite.Activities" xmlns:ugae="clr-namespace:UiPath.GSuite.Activities.Enums;assembly=UiPath.GSuite.Activities" xmlns:ugam="clr-namespace:UiPath.GSuite.Activities.Models;assembly=UiPath.GSuite.Activities" xmlns:ugase="clr-namespace:UiPath.GSuite.Activities.Sheets.Enums;assembly=UiPath.GSuite.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:umae="clr-namespace:UiPath.Mail.Activities.Enums;assembly=UiPath.Mail.Activities" xmlns:umame="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail.Enums;assembly=UiPath.Mail.Activities" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.GSuite.Activities" xmlns:usau1="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.Mail.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.GSuite.Activities.Sheets.Filters</x:String>
+      <x:String>UiPath.GSuite.Activities.Filters</x:String>
+      <x:String>UiPath.GSuite.Sheets.Enums</x:String>
+      <x:String>UiPath.GSuite.Activities.Models</x:String>
+      <x:String>UiPath.GSuite.Drive.Models</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
+      <x:String>UiPath.GSuite.Activities.Utilities</x:String>
+      <x:String>UiPath.Productivity.Activities.Diagnostics</x:String>
+      <x:String>UiPath.GSuite.Activities.Sheets.Triggers</x:String>
+      <x:String>UiPath.Shared.Activities</x:String>
+      <x:String>UiPath.Shared.Activities.ConnectionService.Contracts</x:String>
+      <x:String>UiPath.GSuite.Activities</x:String>
+      <x:String>System.Reflection</x:String>
+      <x:String>System.ComponentModel</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>UiPath.GSuite.Activities.Drive.Enums</x:String>
+      <x:String>UiPath.Shared.Activities.Utils</x:String>
+      <x:String>UiPath.GSuite.Activities.Enums</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>UiPath.GSuite.Activities.Sheets.Enums</x:String>
+      <x:String>UiPath.GSuite.Sheets.Models</x:String>
+      <x:String>System.Linq.Expressions</x:String>
+      <x:String>UiPath.DataTableUtilities</x:String>
+      <x:String>System.Numerics</x:String>
+      <x:String>UiPath.Mail</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities.Mail.Enums</x:String>
+      <x:String>UiPath.Mail.Activities.Enums</x:String>
+      <x:String>UiPath.Mail.SMTP.Activities</x:String>
+      <x:String>UiPath.Mail.Activities</x:String>
+      <x:String>UiPath.GSuite.Activities.Gmail.Enums</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Drawing.Common</AssemblyReference>
+      <AssemblyReference>System.Drawing.Primitives</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Net.Mail</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Constants</AssemblyReference>
+      <AssemblyReference>UiPath.GSuite.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.GSuite</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+      <AssemblyReference>System.Reflection.DispatchProxy</AssemblyReference>
+      <AssemblyReference>System.Reflection.TypeExtensions</AssemblyReference>
+      <AssemblyReference>System.Reflection.Metadata</AssemblyReference>
+      <AssemblyReference>System.Reflection.MetadataLoadContext</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.EventBasedAsync</AssemblyReference>
+      <AssemblyReference>System.ComponentModel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Primitives</AssemblyReference>
+      <AssemblyReference>System.Private.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Private.DataContractSerialization</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Formatters</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Primitives</AssemblyReference>
+      <AssemblyReference>System.Private.Xml</AssemblyReference>
+      <AssemblyReference>System.Security.Permissions</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>System.Console</AssemblyReference>
+      <AssemblyReference>System.Configuration.ConfigurationManager</AssemblyReference>
+      <AssemblyReference>System.Memory</AssemblyReference>
+      <AssemblyReference>System.Private.Uri</AssemblyReference>
+      <AssemblyReference>System.Linq.Async</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.Collections.NonGeneric</AssemblyReference>
+      <AssemblyReference>System.Linq.Expressions</AssemblyReference>
+      <AssemblyReference>System.Data.SqlClient</AssemblyReference>
+      <AssemblyReference>System.Runtime.Numerics</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities.Design</AssemblyReference>
+      <AssemblyReference>System.Memory.Data</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1447,3528" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_Applicants" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_Pending" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <Sequence DisplayName="HR Recruitment &amp; Screening Main Process" sap:VirtualizedContainerService.HintSize="558,3505" sap2010:WorkflowViewState.IdRef="Sequence_2">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <uga:GSuiteApplicationScope Account="{x:Null}" ApiKey="{x:Null}" BrowserItemFriendlyName="{x:Null}" BrowserItemFullPath="{x:Null}" BrowserItemId="{x:Null}" BrowserParentItemId="{x:Null}" BrowserRuntimeItemFriendlyName="{x:Null}" BrowserRuntimeItemFullPath="{x:Null}" BrowserRuntimeItemId="{x:Null}" BrowserRuntimeParentItemId="{x:Null}" BucketId="{x:Null}" BucketName="{x:Null}" ConnectionAccountName="{x:Null}" ConnectionId="{x:Null}" Connector="{x:Null}" ContinueOnError="{x:Null}" CredentialID="{x:Null}" CredentialSecret="{x:Null}" Folder="{x:Null}" ManualRuntimeItemFullPath="{x:Null}" SecureCredentialSecret="{x:Null}" ServiceAccountEmail="{x:Null}" TimeoutMS="{x:Null}" UserEmail="{x:Null}" AuthenticationType="ServiceAccountKey" BucketInputMode="Browse" ConfigLocation="PropertiesPanel" DataStoreLocation="DISK" DisplayName="Google Workspace Scope" HasDomainWideAccesss="False" sap:VirtualizedContainerService.HintSize="524,3422" sap2010:WorkflowViewState.IdRef="GSuiteApplicationScope_1" KeyPath="C:\Users\arlif\Documents\UiPath\HR_Recruitment_Automation\Credentials\credentials.json" KeyType="JSON" OAuthClient="UIPATH" Password="notasecret" RuntimeItemInputMode="Browse" Services="Unselected" UseConnectionService="False">
+        <uga:GSuiteApplicationScope.AuthenticationScopes>
+          <scg:List x:TypeArguments="InArgument(x:String)" Capacity="3">
+            <InArgument x:TypeArguments="x:String">https://mail.google.com/</InArgument>
+            <InArgument x:TypeArguments="x:String">https://www.googleapis.com/auth/gmail.send</InArgument>
+            <InArgument x:TypeArguments="x:String">https://www.googleapis.com/auth/spreadsheets</InArgument>
+          </scg:List>
+        </uga:GSuiteApplicationScope.AuthenticationScopes>
+        <uga:GSuiteApplicationScope.AuthenticationTypeBackup>
+          <usau:BackupSlot x:TypeArguments="ugae:GoogleAuthenticationType" StoredValue="ServiceAccountKey">
+            <usau:BackupSlot.BackupValues>
+              <scg:List x:TypeArguments="x:Object" x:Key="ServiceAccountKey" Capacity="4">
+                <x:Null />
+                <x:Null />
+                <InArgument x:TypeArguments="x:String">Credentials\credentials.json</InArgument>
+                <InArgument x:TypeArguments="x:String">notasecret</InArgument>
+              </scg:List>
+              <scg:List x:TypeArguments="x:Object" x:Key="OAuthClientID" Capacity="4">
+                <x:Null />
+                <x:Null />
+                <x:Null />
+                <InArgument x:TypeArguments="x:String">PleaseSelectAnAccountId</InArgument>
+              </scg:List>
+              <scg:List x:TypeArguments="x:Object" x:Key="ApiKey" Capacity="1">
+                <x:Null />
+              </scg:List>
+            </usau:BackupSlot.BackupValues>
+          </usau:BackupSlot>
+        </uga:GSuiteApplicationScope.AuthenticationTypeBackup>
+        <uga:GSuiteApplicationScope.Body>
+          <ActivityAction x:TypeArguments="x:Object">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="x:Object" Name="GSuiteScope" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="522,3247" sap2010:WorkflowViewState.IdRef="Sequence_3">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <uga:ReadRangeConnections x:TypeArguments="sd:DataTable" BrowserItemFriendlyName="{x:Null}" BrowserItemId="{x:Null}" ColumnNames="{x:Array Type=x:String}" ConnectionAccountName="{x:Null}" ConnectionId="{x:Null}" ContinueOnError="{x:Null}" RangeInformation="{x:Null}" RangeMetadata="{x:Null}" Spreadsheet="{x:Null}" TemplateBrowserItemFriendlyName="{x:Null}" TemplateBrowserItemId="{x:Null}" AuthScopesInvalid="False" DisplayName="Read Range" HasHeaders="True" sap:VirtualizedContainerService.HintSize="488,228" sap2010:WorkflowViewState.IdRef="ReadRangeConnections`1_4" ItemSelectionMode="UrlOrId" ManualEntrySpreadsheetId="[SpreadsheetID]" Range="[SheetName]" ReadAs="Values" Result="[dt_Applicants]" UseConnectionService="False" WorkingWithTemplateSpreadsheet="False">
+                <uga:ReadRangeConnections.FileIdBackup>
+                  <usau:BackupSlot x:TypeArguments="ugade:EDriveItemMode" x:Name="__ReferenceID0" StoredValue="UrlOrId">
+                    <usau:BackupSlot.BackupValues>
+                      <scg:List x:TypeArguments="x:Object" x:Key="Browse" Capacity="3">
+                        <x:Null />
+                        <x:Null />
+                        <x:Null />
+                      </scg:List>
+                    </usau:BackupSlot.BackupValues>
+                  </usau:BackupSlot>
+                </uga:ReadRangeConnections.FileIdBackup>
+                <uga:ReadRangeConnections.Item>
+                  <ugam:DriveItemArgument Backup="{x:Reference __ReferenceID0}" BrowserId="{x:Null}" ConnectionDescriptor="{x:Null}" ConnectionKey="{x:Null}" DriveId="{x:Null}" Existing="{x:Null}" FriendlyName="{x:Null}" FullPath="{x:Null}" ParentId="{x:Null}" ParentIdFriendlyName="{x:Null}" RelativePath="{x:Null}" IdOrUrl="[SpreadsheetID]" InputMode="UrlOrId">
+                    <ugam:DriveItemArgument.FullPathHint>
+                      <InArgument x:TypeArguments="x:String">
+                        <Literal x:TypeArguments="x:String" Value="" />
+                      </InArgument>
+                    </ugam:DriveItemArgument.FullPathHint>
+                    <ugam:DriveItemArgument.ParentIdFullPathHint>
+                      <InArgument x:TypeArguments="x:String">
+                        <Literal x:TypeArguments="x:String" Value="" />
+                      </InArgument>
+                    </ugam:DriveItemArgument.ParentIdFullPathHint>
+                  </ugam:DriveItemArgument>
+                </uga:ReadRangeConnections.Item>
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:String x:Key="bbbffa17-1024-47ac-a79a-41b860f664d0">Share</x:String>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+              </uga:ReadRangeConnections>
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="488,175" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;บอทดึงข้อมูลผู้สมัครสำเร็จ จำนวนทั้งหมด: &quot; + dt_Applicants.Rows.Count.ToString + &quot; รายการ&quot;]" />
+              <ui:FilterDataTable DataTable="[dt_Applicants]" DisplayName="Filter Data Table" FilterRowsMode="Keep" sap:VirtualizedContainerService.HintSize="488,195" sap2010:WorkflowViewState.IdRef="FilterDataTable_1" OutputDataTable="[dt_Pending]" SelectColumnsMode="Remove">
+                <ui:FilterDataTable.Filters>
+                  <scg:List x:TypeArguments="ui:FilterOperationArgument" Capacity="4">
+                    <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
+                      <ui:FilterOperationArgument.Column>
+                        <InArgument x:TypeArguments="x:String">["สถานะ"]</InArgument>
+                      </ui:FilterOperationArgument.Column>
+                      <ui:FilterOperationArgument.Operand>
+                        <InArgument x:TypeArguments="x:String">["รอดำเนินการ"]</InArgument>
+                      </ui:FilterOperationArgument.Operand>
+                    </ui:FilterOperationArgument>
+                  </scg:List>
+                </ui:FilterDataTable.Filters>
+                <ui:FilterDataTable.SelectColumns>
+                  <scg:List x:TypeArguments="InArgument" Capacity="4">
+                    <x:Null />
+                  </scg:List>
+                </ui:FilterDataTable.SelectColumns>
+              </ui:FilterDataTable>
+              <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[dt_Pending]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="488,2091" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+                <ui:ForEachRow.Body>
+                  <ActivityAction x:TypeArguments="sd:DataRow">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="sd:DataRow" Name="CurrentRow" />
+                    </ActivityAction.Argument>
+                    <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="486,1909" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                      <sap:WorkflowViewStateService.ViewState>
+                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                        </scg:Dictionary>
+                      </sap:WorkflowViewStateService.ViewState>
+                      <If Condition="[Convert.ToDouble(CurrentRow(&quot;GPA&quot;)) &gt;= 3.00]" sap:VirtualizedContainerService.HintSize="452,1849" sap2010:WorkflowViewState.IdRef="If_1">
+                        <If.Then>
+                          <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="450,856" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                            <sap:WorkflowViewStateService.ViewState>
+                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                              </scg:Dictionary>
+                            </sap:WorkflowViewStateService.ViewState>
+                            <Assign sap:VirtualizedContainerService.HintSize="416,175" sap2010:WorkflowViewState.IdRef="Assign_1">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:Object">[CurrentRow("สถานะ")]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:Object">["ผ่านการคัดกรอง"]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <Assign sap:VirtualizedContainerService.HintSize="416,175" sap2010:WorkflowViewState.IdRef="Assign_2">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:Object">[CurrentRow("หมายเหตุจากบอท")]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:Object">["ผ่านเกณฑ์ GPA ขั้นต่ำ"]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <ui:SendMail Bcc="{x:Null}" Cc="{x:Null}" ContinueOnError="{x:Null}" From="{x:Null}" MailMessage="{x:Null}" Name="{x:Null}" ReplyTo="{x:Null}" ResourceAttachmentList="{x:Null}" ResourceAttachments="{x:Null}" Result="{x:Null}" SecurePassword="{x:Null}" TimeoutMS="{x:Null}" UseOAuth="{x:Null}" Action="Forward" AttachmentInputMode="Existing" Body="[&quot;เรียน คุณ &quot; + CurrentRow(&quot;ชื่อ-นามสกุล&quot;).ToString + &quot; คุณผ่านการคัดกรองเบื้องต้น กรุณาเลือกลิงก์วันเวลานัดสัมภาษณ์: https://calendly.com/arlif2521/hr-interview&quot;]" ConnectionId="a8f9d5b1-2192-46a5-b778-48a5f469af87" ConnectionMode="LegacyConfiguration" CreatedAfterSolutionSupport="True" DisplayName="Send SMTP Email" Email="arlif2521@gmail.com" EnableSSL="True" sap:VirtualizedContainerService.HintSize="416,279" sap2010:WorkflowViewState.IdRef="SendMail_2" IgnoreCRL="True" IsBodyHtml="False" Password="mvrjnjqvaolrzccp" Port="587" SecureConnection="Auto" Server="smtp.gmail.com" Subject="แจ้งผลการคัดกรองเบื้องต้น - นัดสัมภาษณ์งาน" To="[CurrentRow(&quot;อีเมล&quot;).ToString.Trim]" UseISConnection="False" UseRichTextEditor="True">
+                              <ui:SendMail.AttachmentsBackup>
+                                <usau1:BackupSlot x:TypeArguments="umame:AttachmentInputMode" StoredValue="Existing">
+                                  <usau1:BackupSlot.BackupValues>
+                                    <scg:Dictionary x:TypeArguments="umame:AttachmentInputMode, scg:List(x:Object)" />
+                                  </usau1:BackupSlot.BackupValues>
+                                </usau1:BackupSlot>
+                              </ui:SendMail.AttachmentsBackup>
+                              <ui:SendMail.ConnectionDetailsBackupSlot>
+                                <usau1:BackupSlot x:TypeArguments="umae:ConnectionDetails" StoredValue="LegacyConfiguration">
+                                  <usau1:BackupSlot.BackupValues>
+                                    <scg:List x:TypeArguments="x:Object" x:Key="IntegrationService" Capacity="1">
+                                      <x:String>a8f9d5b1-2192-46a5-b778-48a5f469af87</x:String>
+                                    </scg:List>
+                                    <scg:List x:TypeArguments="x:Object" x:Key="LegacyConfiguration" Capacity="7">
+                                      <x:Null />
+                                      <x:Null />
+                                      <x:Null />
+                                      <x:Null />
+                                      <x:Null />
+                                      <x:Null />
+                                      <InArgument x:TypeArguments="x:Boolean">False</InArgument>
+                                    </scg:List>
+                                  </usau1:BackupSlot.BackupValues>
+                                </usau1:BackupSlot>
+                              </ui:SendMail.ConnectionDetailsBackupSlot>
+                              <ui:SendMail.Files>
+                                <scg:List x:TypeArguments="InArgument(x:String)" Capacity="0" />
+                              </ui:SendMail.Files>
+                            </ui:SendMail>
+                            <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,167.33333333333334" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot; [ผ่านเกณฑ์] ส่งอีเมมนัดสัมภาษณ์ให้: &quot; + CurrentRow(&quot;ชื่อ-นามสกุล&quot;).ToString + &quot; (&quot; + CurrentRow(&quot;อีเมล&quot;).ToString + &quot;) เรียบร้อยแล้ว&quot;]" />
+                          </Sequence>
+                        </If.Then>
+                        <If.Else>
+                          <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="450,862.6666666666666" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                            <sap:WorkflowViewStateService.ViewState>
+                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                              </scg:Dictionary>
+                            </sap:WorkflowViewStateService.ViewState>
+                            <Assign sap:VirtualizedContainerService.HintSize="416,176.66666666666666" sap2010:WorkflowViewState.IdRef="Assign_3">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:Object">[CurrentRow("สถานะ")]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:Object">["ไม่ผ่านการคัดกรอง"]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <Assign sap:VirtualizedContainerService.HintSize="416,176.66666666666666" sap2010:WorkflowViewState.IdRef="Assign_4">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:Object">[CurrentRow("หมายเหตุจากบอท")]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:Object">["GPA ต่ำกว่าเกณฑ์ขั้นต่ำ 3.00"]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <ui:SendMail Bcc="{x:Null}" Cc="{x:Null}" ContinueOnError="{x:Null}" From="{x:Null}" MailMessage="{x:Null}" Name="{x:Null}" ReplyTo="{x:Null}" ResourceAttachmentList="{x:Null}" ResourceAttachments="{x:Null}" Result="{x:Null}" SecurePassword="{x:Null}" TimeoutMS="{x:Null}" UseOAuth="{x:Null}" Action="Forward" AttachmentInputMode="Existing" Body="[&quot;เรียน คุณ &quot; + CurrentRow(&quot;ชื่อ-นามสกุล&quot;).ToString + &quot; ขอขอบคุณที่สนใจสมัครงาน บริษัทขอแจ้งว่าคุณสมบัติยังไม่ผ่านเกณฑ์ในรอบนี้&quot;]" ConnectionMode="LegacyConfiguration" CreatedAfterSolutionSupport="True" DisplayName="Send SMTP Email" Email="arlif2521@gmail.com" EnableSSL="True" sap:VirtualizedContainerService.HintSize="416,282" sap2010:WorkflowViewState.IdRef="SendMail_3" IgnoreCRL="True" IsBodyHtml="False" Password="mvrjnjqvaolrzccp" Port="587" SecureConnection="Auto" Server="smtp.gmail.com" Subject="แจ้งผลการคัดกรองเบื้องต้น" To="[CurrentRow(&quot;อีเมล&quot;).ToString.Trim]" UseISConnection="False" UseRichTextEditor="True">
+                              <ui:SendMail.AttachmentsBackup>
+                                <usau1:BackupSlot x:TypeArguments="umame:AttachmentInputMode" StoredValue="Existing">
+                                  <usau1:BackupSlot.BackupValues>
+                                    <scg:Dictionary x:TypeArguments="umame:AttachmentInputMode, scg:List(x:Object)" />
+                                  </usau1:BackupSlot.BackupValues>
+                                </usau1:BackupSlot>
+                              </ui:SendMail.AttachmentsBackup>
+                              <ui:SendMail.ConnectionDetailsBackupSlot>
+                                <usau1:BackupSlot x:TypeArguments="umae:ConnectionDetails" StoredValue="LegacyConfiguration">
+                                  <usau1:BackupSlot.BackupValues>
+                                    <scg:List x:TypeArguments="x:Object" x:Key="IntegrationService" Capacity="1">
+                                      <x:String>a8f9d5b1-2192-46a5-b778-48a5f469af87</x:String>
+                                    </scg:List>
+                                  </usau1:BackupSlot.BackupValues>
+                                </usau1:BackupSlot>
+                              </ui:SendMail.ConnectionDetailsBackupSlot>
+                              <ui:SendMail.Files>
+                                <scg:List x:TypeArguments="InArgument(x:String)" Capacity="0" />
+                              </ui:SendMail.Files>
+                            </ui:SendMail>
+                            <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,167.33333333333334" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;[ไม่ผ่านเกณฑ์] ส่งอีเมลแจ้งผลปฏิเสธให้: &quot; + CurrentRow(&quot;ชื่อ-นามสกุล&quot;).ToString + &quot; (&quot; + CurrentRow(&quot;อีเมล&quot;).ToString + &quot;) เรียบร้อยแล้ว&quot;]" />
+                          </Sequence>
+                        </If.Else>
+                      </If>
+                    </Sequence>
+                  </ActivityAction>
+                </ui:ForEachRow.Body>
+              </ui:ForEachRow>
+              <uga:WriteRangeConnections BrowserItemFriendlyName="{x:Null}" BrowserItemId="{x:Null}" ConnectionAccountName="{x:Null}" ConnectionId="{x:Null}" ContinueOnError="{x:Null}" Spreadsheet="{x:Null}" TemplateBrowserItemFriendlyName="{x:Null}" TemplateBrowserItemId="{x:Null}" AuthScopesInvalid="False" DisplayName="Write Range" sap:VirtualizedContainerService.HintSize="488,332" sap2010:WorkflowViewState.IdRef="WriteRangeConnections_1" IncludeHeaders="True" ItemSelectionMode="UrlOrId" ManualEntrySpreadsheetId="[SpreadsheetID]" Range="[GlobalVariablesNamespace.GlobalVariables.SheetName]" RowPosition="0" Source="[dt_Pending]" UseConnectionService="False" WorkingWithTemplateSpreadsheet="False" WriteMode="Overwrite">
+                <uga:WriteRangeConnections.FileIdBackup>
+                  <usau:BackupSlot x:TypeArguments="ugade:EDriveItemMode" x:Name="__ReferenceID1" StoredValue="UrlOrId">
+                    <usau:BackupSlot.BackupValues>
+                      <scg:List x:TypeArguments="x:Object" x:Key="Browse" Capacity="3">
+                        <x:Null />
+                        <x:Null />
+                        <x:Null />
+                      </scg:List>
+                    </usau:BackupSlot.BackupValues>
+                  </usau:BackupSlot>
+                </uga:WriteRangeConnections.FileIdBackup>
+                <uga:WriteRangeConnections.Item>
+                  <ugam:DriveItemArgument Backup="{x:Reference __ReferenceID1}" BrowserId="{x:Null}" ConnectionDescriptor="{x:Null}" ConnectionKey="{x:Null}" DriveId="{x:Null}" Existing="{x:Null}" FriendlyName="{x:Null}" FullPath="{x:Null}" ParentId="{x:Null}" ParentIdFriendlyName="{x:Null}" RelativePath="{x:Null}" IdOrUrl="[SpreadsheetID]" InputMode="UrlOrId">
+                    <ugam:DriveItemArgument.FullPathHint>
+                      <InArgument x:TypeArguments="x:String">
+                        <Literal x:TypeArguments="x:String" Value="" />
+                      </InArgument>
+                    </ugam:DriveItemArgument.FullPathHint>
+                    <ugam:DriveItemArgument.ParentIdFullPathHint>
+                      <InArgument x:TypeArguments="x:String">
+                        <Literal x:TypeArguments="x:String" Value="" />
+                      </InArgument>
+                    </ugam:DriveItemArgument.ParentIdFullPathHint>
+                  </ugam:DriveItemArgument>
+                </uga:WriteRangeConnections.Item>
+                <uga:WriteRangeConnections.RangeWriteModeBackup>
+                  <usau:BackupSlot x:TypeArguments="ugase:RangeWriteMode" StoredValue="Overwrite">
+                    <usau:BackupSlot.BackupValues>
+                      <scg:Dictionary x:TypeArguments="ugase:RangeWriteMode, scg:List(x:Object)" />
+                    </usau:BackupSlot.BackupValues>
+                  </usau:BackupSlot>
+                </uga:WriteRangeConnections.RangeWriteModeBackup>
+              </uga:WriteRangeConnections>
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="488,166" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info" Message="[&quot;บอทคัดกรองและอัปเดตข้อมูลกลับลง Google Sheet เสร็จสิ้นสมบูรณ์เรียบร้อยแล้ว!&quot;]" />
+            </Sequence>
+          </ActivityAction>
+        </uga:GSuiteApplicationScope.Body>
+        <uga:GSuiteApplicationScope.BucketFullPathBackup>
+          <usau:BackupSlot x:TypeArguments="ugade:EDriveItemMode" StoredValue="Browse">
+            <usau:BackupSlot.BackupValues>
+              <scg:Dictionary x:TypeArguments="ugade:EDriveItemMode, scg:List(x:Object)" />
+            </usau:BackupSlot.BackupValues>
+          </usau:BackupSlot>
+        </uga:GSuiteApplicationScope.BucketFullPathBackup>
+        <uga:GSuiteApplicationScope.RuntimeItemFullPathBackup>
+          <usau:BackupSlot x:TypeArguments="ugade:EDriveItemMode" StoredValue="{x:Null}">
+            <usau:BackupSlot.BackupValues>
+              <scg:Dictionary x:TypeArguments="ugade:EDriveItemMode, scg:List(x:Object)" />
+            </usau:BackupSlot.BackupValues>
+          </usau:BackupSlot>
+        </uga:GSuiteApplicationScope.RuntimeItemFullPathBackup>
+      </uga:GSuiteApplicationScope>
+    </Sequence>
+  </Sequence>
+</Activity>

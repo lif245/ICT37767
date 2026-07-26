@@ -1,0 +1,9 @@
+{
+  "SpreadsheetID": "AKfycbwsH0ycFLQCKsqGyfJXH4zEePTcNi9VgysmjCIjZX_isNOrC_jZXbDSszhUSjrsEZ3N",
+  "SheetName": "Applicants",
+  "ServiceAccountPath": "Credentials/credentials.json",
+  "SmtpServer": "smtp.gmail.com",
+  "SmtpPort": 587,
+  "SmtpSenderEmail": "hr-recruitment-bot@example.com",
+  "WebAppUrl": "https://script.google.com/macros/s/AKfycbwsH0ycFLQCKsqGyfJXH4zEePTcNi9VgysmjCIjZX_isNOrC_jZXbDSszhUSjrsEZ3N/exec"
+}
